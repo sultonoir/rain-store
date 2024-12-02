@@ -1,4 +1,4 @@
-import { type ProtectedTRPCContext } from "../../trpc";
+import { type TRPCContext } from "../../trpc";
 import type * as input from "./payment.input";
 import { generateId } from "lucia";
 import { TRPCError } from "@trpc/server";
@@ -10,7 +10,7 @@ export async function createPayment({
   ctx,
   input,
 }: {
-  ctx: ProtectedTRPCContext;
+  ctx: TRPCContext;
   input: input.CreatePayment;
 }) {
   const { cart, name, email } = input;
@@ -47,7 +47,7 @@ export async function createPayment({
   }
 
   const notifications = await handleNotifications(
-    ctx,
+    email,
     total,
     quantity,
     checkout.id,
@@ -55,10 +55,7 @@ export async function createPayment({
   return notifications;
 }
 
-async function getCoupon(
-  ctx: ProtectedTRPCContext,
-  promoId: string | undefined,
-) {
+async function getCoupon(ctx: TRPCContext, promoId: string | undefined) {
   if (!promoId) return null; // Jika promoId undefined, langsung kembalikan null
   return ctx.db.coupon.findFirst({ where: { id: promoId } });
 }
@@ -79,7 +76,7 @@ function calculatePrices(cart: input.Cart[], coupon: Coupon | null) {
 }
 
 async function createCheckout(
-  ctx: ProtectedTRPCContext,
+  ctx: TRPCContext,
   total: number,
   quantity: number,
   name: string,
@@ -178,15 +175,15 @@ async function updateStock({
 }
 
 async function handleNotifications(
-  ctx: ProtectedTRPCContext,
+  name: string,
   total: number,
   quantity: number,
   checkoutId: string,
 ) {
   const adminNotifi = await NotifitoAdmin({
-    message: `${ctx.user.name} has made a purchase worth $${total} with a quantity of ${quantity} items`,
+    message: `${name} has made a purchase worth $${total} with a quantity of ${quantity} items`,
     status: "PaymentUpdate",
-    issuerId: ctx.user.id,
+    issuerId: name,
     link: "/dashboard/order",
     checkoutId,
   });

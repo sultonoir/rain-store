@@ -130,3 +130,11 @@ export type SearchProductsClient = {
 export type HistoryPage = {
   searchParams: GetHistory;
 };
+
+type Params = Promise<Record<string, string>>;
+type SearchParams = Promise<Record<string, string | undefined>>;
+
+export type PageDynamic = {
+  searchParams: SearchParams;
+  params: Params;
+};
