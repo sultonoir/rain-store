@@ -1,5 +1,12 @@
-import { postRouter } from "@/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+import { userProsedure } from "./routers/user/user.prosedure";
+import { categoryProcedure } from "./routers/category/category.procedure";
+import { subcategoryProcedure } from "./routers/subcategory/subcategory.procedure";
+import { productProcedure } from "./routers/product/product.procedure";
+import { couponProcedure } from "./routers/coupon/coupon.procedure";
+import { sizeProcedure } from "./routers/size/size.procedure";
+import { notifiProcedure } from "./routers/notifi/notifi.procedure";
+import { paymentProcedure } from "./routers/payment/payment.procedure";
 
 /**
  * This is the primary router for your server.
@@ -7,7 +14,14 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: postRouter,
+  user: userProsedure,
+  category: categoryProcedure,
+  subcategory: subcategoryProcedure,
+  product: productProcedure,
+  coupon: couponProcedure,
+  size: sizeProcedure,
+  notifi: notifiProcedure,
+  payment: paymentProcedure,
 });
 
 // export type definition of API

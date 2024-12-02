@@ -1,0 +1,26 @@
+import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import * as input from "./subcategory.input";
+import * as service from "./subcategory.service";
+
+export const subcategoryProcedure = createTRPCRouter({
+  byCategoryId: protectedProcedure
+    .input(input.getByCategoryInput)
+    .query(({ ctx, input }) => service.getByCategoryId(ctx, input)),
+
+  list: protectedProcedure.query(({ ctx }) => service.listSubcategory(ctx)),
+
+  post: protectedProcedure
+    .input(input.postSubCategoryInput)
+    .mutation(({ ctx, input }) => service.createSubCategory(ctx, input)),
+  generate: protectedProcedure.mutation(async ({ ctx }) =>
+    service.generateSub(ctx),
+  ),
+
+  removeById: protectedProcedure
+    .input(input.RemoveSub)
+    .mutation(service.removeSub),
+
+  upload: protectedProcedure.mutation(async ({ ctx }) =>
+    service.uploadsub(ctx),
+  ),
+});

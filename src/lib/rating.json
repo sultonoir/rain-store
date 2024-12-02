@@ -1,0 +1,302 @@
+[
+  {
+    "id": "1",
+    "name": "John Doe",
+    "value": 5,
+    "message": "Excellent product! Highly recommended."
+  },
+  {
+    "id": "2",
+    "name": "Jane Smith",
+    "value": 4,
+    "message": "Good quality, but could be improved in terms of packaging."
+  },
+  {
+    "id": "3",
+    "name": "Alice Johnson",
+    "value": 3,
+    "message": "Average experience, the product is okay but nothing special."
+  },
+  {
+    "id": "4",
+    "name": "Bob Brown",
+    "value": 2,
+    "message": "Not satisfied. The product didn’t meet my expectations."
+  },
+  {
+    "id": "5",
+    "name": "Charlie Davis",
+    "value": 1,
+    "message": "Terrible quality, I would not recommend this to anyone."
+  },
+  {
+    "id": "6",
+    "name": "David Williams",
+    "value": 5,
+    "message": "Absolutely love it! Worth every penny."
+  },
+  {
+    "id": "7",
+    "name": "Eve White",
+    "value": 4,
+    "message": "Very good, but could use a little more features."
+  },
+  {
+    "id": "8",
+    "name": "Frank Harris",
+    "value": 3,
+    "message": "It’s decent, but the functionality could be better."
+  },
+  {
+    "id": "9",
+    "name": "Grace Clark",
+    "value": 2,
+    "message": "Disappointed with the quality, expected more."
+  },
+  {
+    "id": "10",
+    "name": "Helen Lewis",
+    "value": 1,
+    "message": "Worst purchase ever! Returning it."
+  },
+  {
+    "id": "11",
+    "name": "Ivy Young",
+    "value": 5,
+    "message": "Fantastic! Very happy with the purchase."
+  },
+  {
+    "id": "12",
+    "name": "Jack Hall",
+    "value": 5,
+    "message": "Good product but delivery took longer than expected."
+  },
+  {
+    "id": "13",
+    "name": "Kathy Allen",
+    "value": 3,
+    "message": "Satisfactory, but it doesn't live up to the hype."
+  },
+  {
+    "id": "14",
+    "name": "Leo Scott",
+    "value": 2,
+    "message": "The product didn’t meet my expectations at all."
+  },
+  {
+    "id": "15",
+    "name": "Mona King",
+    "value": 1,
+    "message": "Very poor quality, I will not buy from this seller again."
+  },
+  {
+    "id": "16",
+    "name": "Nina Wright",
+    "value": 5,
+    "message": "Exceeded my expectations, great value for money."
+  },
+  {
+    "id": "17",
+    "name": "Oscar Green",
+    "value": 4,
+    "message": "Good but there's room for improvement in the design."
+  },
+  {
+    "id": "18",
+    "name": "Paul Adams",
+    "value": 3,
+    "message": "It's fine, but nothing extraordinary."
+  },
+  {
+    "id": "19",
+    "name": "Quinn Turner",
+    "value": 2,
+    "message": "Not happy with the purchase. It broke after a week."
+  },
+  {
+    "id": "20",
+    "name": "Rachel Martinez",
+    "value": 1,
+    "message": "Terrible experience, product was defective."
+  },
+  {
+    "id": "21",
+    "name": "Sam Robinson",
+    "value": 5,
+    "message": "I love it! Definitely worth the price."
+  },
+  {
+    "id": "22",
+    "name": "Tina Perez",
+    "value": 4,
+    "message": "Great quality, but I wish it came in different colors."
+  },
+  {
+    "id": "23",
+    "name": "Ursula Carter",
+    "value": 3,
+    "message": "It's okay, but I was expecting something better."
+  },
+  {
+    "id": "24",
+    "name": "Vera Brooks",
+    "value": 2,
+    "message": "Not worth the money, I regret buying it."
+  },
+  {
+    "id": "25",
+    "name": "Walter Murphy",
+    "value": 1,
+    "message": "Very disappointed. The item was damaged upon arrival."
+  },
+  {
+    "id": "26",
+    "name": "Xander Lee",
+    "value": 5,
+    "message": "Outstanding product, will buy again."
+  },
+  {
+    "id": "27",
+    "name": "Yvonne Turner",
+    "value": 4,
+    "message": "Good product but it was a bit difficult to assemble."
+  },
+  {
+    "id": "28",
+    "name": "Zack Williams",
+    "value": 3,
+    "message": "It works, but it's not exactly what I expected."
+  },
+  {
+    "id": "29",
+    "name": "Alice Martin",
+    "value": 2,
+    "message": "I’m not impressed, it broke after a month of use."
+  },
+  {
+    "id": "30",
+    "name": "Benjamin Clark",
+    "value": 1,
+    "message": "Worst purchase I've made. Will never buy from this store again."
+  },
+  {
+    "id": "31",
+    "name": "Catherine Lewis",
+    "value": 5,
+    "message": "I absolutely love this, it works perfectly."
+  },
+  {
+    "id": "32",
+    "name": "Daniel Walker",
+    "value": 4,
+    "message": "Good product overall, but it could be more durable."
+  },
+  {
+    "id": "33",
+    "name": "Eva Harris",
+    "value": 3,
+    "message": "It’s decent, but not as good as advertised."
+  },
+  {
+    "id": "34",
+    "name": "Felix Davis",
+    "value": 2,
+    "message": "Not impressed. It doesn't do what it’s supposed to."
+  },
+  {
+    "id": "35",
+    "name": "Georgia Roberts",
+    "value": 1,
+    "message": "Extremely disappointed. A complete waste of money."
+  },
+  {
+    "id": "36",
+    "name": "Hannah Lewis",
+    "value": 5,
+    "message": "Perfect! Couldn’t be happier with my purchase."
+  },
+  {
+    "id": "37",
+    "name": "Isaac Scott",
+    "value": 4,
+    "message": "Great product, but the instructions were unclear."
+  },
+  {
+    "id": "38",
+    "name": "Julia Martinez",
+    "value": 3,
+    "message": "It’s okay. A little more functionality would be nice."
+  },
+  {
+    "id": "39",
+    "name": "Kyle Carter",
+    "value": 2,
+    "message": "The product didn’t work as expected. I’m returning it."
+  },
+  {
+    "id": "40",
+    "name": "Lily Wright",
+    "value": 1,
+    "message": "Extremely disappointed. It malfunctioned within a week."
+  },
+  {
+    "id": "41",
+    "name": "Mason Young",
+    "value": 5,
+    "message": "Love it, works like a charm!"
+  },
+  {
+    "id": "42",
+    "name": "Naomi King",
+    "value": 4,
+    "message": "Great, but I wish the battery life was longer."
+  },
+  {
+    "id": "43",
+    "name": "Oliver White",
+    "value": 3,
+    "message": "It’s fine, but it could be more user-friendly."
+  },
+  {
+    "id": "44",
+    "name": "Penny Brown",
+    "value": 2,
+    "message": "The quality is subpar and doesn’t last long."
+  },
+  {
+    "id": "45",
+    "name": "Quincy Hall",
+    "value": 2,
+    "message": "Very poor, it didn’t work right out of the box."
+  },
+  {
+    "id": "46",
+    "name": "Rita Green",
+    "value": 5,
+    "message": "Very impressed. Would buy again in a heartbeat."
+  },
+  {
+    "id": "47",
+    "name": "Steve Perez",
+    "value": 4,
+    "message": "Nice product, but delivery was delayed."
+  },
+  {
+    "id": "48",
+    "name": "Terry Lee",
+    "value": 3,
+    "message": "Works okay, but not what I was hoping for."
+  },
+  {
+    "id": "49",
+    "name": "Uma Clark",
+    "value": 2,
+    "message": "Not very happy with the purchase. It stopped working after a few days."
+  },
+  {
+    "id": "50",
+    "name": "Victor Adams",
+    "value": 2,
+    "message": "Terrible experience, I wouldn’t recommend this product."
+  }
+]
