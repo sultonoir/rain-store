@@ -26,8 +26,6 @@ const CardProduct = ({ product }: Props) => {
             key={img.id}
             fill
             sizes="(min-width: 1540px) 309px, (min-width: 1280px) 500px, (min-width: 1040px) calc(25vw - 28px), (min-width: 780px) calc(33.33vw - 32px), calc(50vw - 40px"
-            blurDataURL={img.thumbnail}
-            placeholder="blur"
             className="object-cover"
           />
         ))}

@@ -23,4 +23,8 @@ export const productProcedure = createTRPCRouter({
   search: publicProcedure
     .input(input.SearchProductsParams)
     .query(async ({ input, ctx }) => service.searchProducts({ ctx, input })),
+
+  page: publicProcedure
+    .input(input.SearchProductsParams)
+    .query(async ({ input, ctx }) => service.PageSection({ ctx, input })),
 });

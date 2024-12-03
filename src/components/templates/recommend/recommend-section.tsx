@@ -30,15 +30,15 @@ interface Props extends SearchProductsParams {
 }
 
 const RecommendSection = ({ title, loadingClassName, ...props }: Props) => {
-  const { data, status } = api.product.search.useQuery({ ...props });
+  const { data, status } = api.product.page.useQuery({ ...props });
 
   switch (status) {
     case "pending":
       return (
         <LoadingProduct
-          length={props.take}
+          length={5}
           className={cn(
-            "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4",
+            "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5",
             loadingClassName,
           )}
         />

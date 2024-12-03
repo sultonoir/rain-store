@@ -16,12 +16,10 @@ const Page = () => {
     <main className="container relative z-0 min-h-screen py-5">
       <Promo />
       <section className="my-10 flex flex-col justify-items-center gap-5">
-        <InviewContainer>
-          <RecommendSection
-            title="You May Like This Product 🥰"
-            sort="hot-sale"
-          />
-        </InviewContainer>
+        <RecommendSection
+          title="You May Like This Product 🥰"
+          sort="hot-sale"
+        />
         <Flow />
         <HomeCategory />
         <InviewContainer>

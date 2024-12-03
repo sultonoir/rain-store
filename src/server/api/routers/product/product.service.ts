@@ -347,23 +347,13 @@ export async function searchProducts({
     cacheStrategy: { ttl: 60, swr: 60 },
   });
 
-  const newProducts = await Promise.all(
-    products.map(async (item) => {
-      const newImages = await Promise.all(
-        item.productImage.flatMap(async (img) => ({
-          ...img,
-          thumbnail: await createBlurHash(img.url),
-        })),
-      );
-
-      return {
-        ...item,
-        rating: generateRandomDecimal(),
-        selling: generateRandomSelling(),
-        productImage: newImages,
-      };
-    }),
-  );
+  const newProducts = products.map((item) => {
+    return {
+      ...item,
+      rating: generateRandomDecimal(),
+      selling: generateRandomSelling(),
+    };
+  });
 
   if (sort === "most-rating") {
     return {
@@ -466,5 +456,61 @@ export async function recommend({
   return {
     products: newProducts,
     nextCursor,
+  };
+}
+
+export async function PageSection({
+  input,
+}: {
+  ctx: TRPCContext;
+  input: SearchProductsParams;
+}) {
+  const {
+    page,
+    take = 10,
+    sort = "latest", // Default sorting
+  } = input;
+  const pagecount = page ? parseInt(page) : 1;
+  const startIndex = (pagecount - 1) * take; // Mulai dari (currentPage - 1) * 10
+  const endIndex = startIndex + take;
+
+  const products = await db.product.findMany({
+    include: {
+      rating: true,
+      productImage: {
+        take: 1,
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+    cacheStrategy: { ttl: 60, swr: 60 },
+  });
+
+  const newProducts = products.map((item) => {
+    return {
+      ...item,
+      rating: generateRandomDecimal(),
+      selling: generateRandomSelling(),
+    };
+  });
+
+  if (sort === "hot-sale") {
+    return {
+      products: newProducts
+        .sort((a, b) => {
+          return b.selling - a.selling;
+        })
+        .slice(startIndex, endIndex),
+      count: newProducts.length,
+    };
+  }
+  return {
+    products: newProducts
+      .sort((a, b) => {
+        return b.rating - a.rating;
+      })
+      .slice(startIndex, endIndex),
+    count: newProducts.length,
   };
 }
