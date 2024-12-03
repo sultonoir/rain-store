@@ -22,10 +22,10 @@ export default function SearchMobile() {
   }, [pathname]);
 
   return (
-    <div className="flex w-full lg:hidden">
+    <>
       <button
         onClick={hanldeToggle}
-        className="relative inline-flex h-8 w-full items-center justify-start gap-4 whitespace-nowrap rounded-[0.5rem] border border-input bg-muted/50 px-4 py-2 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 sm:pr-12 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+        className="relative inline-flex h-8 w-full items-center justify-start gap-4 whitespace-nowrap rounded-[0.5rem] border border-input bg-muted/50 px-4 py-2 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 sm:pr-12 lg:hidden [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       >
         <div className="pointer-events-none flex items-center justify-center text-muted-foreground/80 peer-disabled:opacity-50">
           <Search size={16} strokeWidth={2} />
@@ -35,7 +35,7 @@ export default function SearchMobile() {
       <AnimatePresence>
         {open && <SearchMobileContent close={hanldeToggle} />}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 
@@ -75,6 +75,7 @@ function SearchMobileContent({ close }: Props) {
 
   return (
     <motion.div
+      tabIndex={-1}
       initial={{ opacity: 0, y: 20 }} // translateX(-50%) dan translateY(20px)
       animate={{ opacity: 1, y: 0 }} // tetap translateX(-50%) dan translateY(0px)
       exit={{ opacity: 0, y: 20 }} // tetap translateX(-50%) dan translateY(20px)

@@ -47,6 +47,7 @@ export function FilterMobile() {
     queryParams.delete("max");
     queryParams.delete("discount");
     queryParams.delete("rating");
+    queryParams.delete("name");
     const path = `${pathname}?${queryParams.toString()}`;
     setFilterOpen();
     router.replace(path);

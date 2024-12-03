@@ -6,7 +6,6 @@ import DialogTermsCoupon from "@/components/templates/coupon/dialog-terms-coupon
 import { SheetCoupon } from "@/components/templates/coupon/sheet-coupon";
 import { FilterMobile } from "@/components/templates/filter/filter-mobile";
 import Footer from "@/components/ui/footer";
-import BottomNavbar from "@/components/templates/navbar/bottom-navbar";
 import ButtonUP from "@/components/templates/button/button-up";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
@@ -20,7 +19,6 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
       <FilterMobile />
       <CartContent />
       <Footer />
-      <BottomNavbar />
       <ButtonUP />
     </Fragment>
   );

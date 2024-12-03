@@ -9,7 +9,7 @@ export default function ButtonUP() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   return (
-    <div className="fixed bottom-20 right-10 z-50">
+    <div className="fixed bottom-20 right-10 z-20">
       <Button onClick={handleUp} size="icon" className="rounded-full">
         <ChevronUp />
       </Button>

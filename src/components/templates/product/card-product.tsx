@@ -16,6 +16,7 @@ const CardProduct = ({ product }: Props) => {
       <Link
         href={`/product/${product.slug}`}
         className="absolute inset-0 z-10"
+        prefetch={true}
         title={product.name}
       />
       <div className="relative block aspect-9/16 h-auto w-full overflow-hidden rounded-lg p-0">
@@ -34,14 +35,12 @@ const CardProduct = ({ product }: Props) => {
         <CardTitle className="w-[calc(100%-1px)] truncate text-[16px] font-normal leading-normal">
           {product.name}
         </CardTitle>
-        <div className="flex items-center">
-          <PriceProduct
-            discount={product.discount}
-            price={product.price}
-            className="flex-grow"
-          />
-          <TotalRating rating={product.rating} />
-        </div>
+        <TotalRating rating={product.rating} />
+        <PriceProduct
+          discount={product.discount}
+          price={product.price}
+          className="flex-grow"
+        />
       </CardContent>
     </Card>
   );
