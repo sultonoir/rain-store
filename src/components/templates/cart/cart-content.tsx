@@ -69,7 +69,7 @@ export default function CartContent() {
             </React.Fragment>
           )}
         </div>
-        {cart.length && (
+        {cart.length > 0 && (
           <div className="bg-accent dark:bg-accent/50">
             <div className="p-6">
               <div className="flex items-center justify-between pb-3">

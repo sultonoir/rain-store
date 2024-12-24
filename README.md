@@ -1,29 +1,49 @@
-# Create T3 App
+![Rainame Thumbnail](https://utfs.io/f/0vsSPX9AUvOHeSXoWVN7hsiRrPmF5cQkfzEWqV093Hj7NbJv)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# Rainame - E-Commerce Website
 
-## What's next? How do I make an app with this?
+Rainame is an e-commerce website built using the powerful **T3 Stack**, designed to provide a seamless and scalable online shopping experience. This repository contains all the code and resources needed to run, build, and customize the Rainame e-commerce platform.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Technologies Used
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+This project utilizes the **T3 Stack**, which includes:
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- **Next.js**: A powerful React framework for building fast and scalable web applications.
+- **TypeScript**: A superset of JavaScript that adds static typing for improved code quality.
+- **Prisma**: An ORM for database management and data querying.
+- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom user interfaces.
+- **TRPC**: A framework for building end-to-end typesafe APIs with TypeScript.
+- **Zod**: A TypeScript-first schema validation library.
 
-## Learn More
+## Features
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- **User Authentication**: Secure login and registration system for customers.
+- **Product Catalog**: Browse products with rich filtering and searching capabilities.
+- **Shopping Cart**: Add, remove, and update items in your cart.
+- **Order Management**: Seamless checkout process with order tracking and history.
+- **Admin Panel**: Manage products, orders, and users from an easy-to-use admin interface.
+- **Responsive Design**: Optimized for both desktop and mobile devices using Tailwind CSS.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Getting Started
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Prerequisites
 
-## How do I deploy this?
+Before you begin, ensure you have the following software installed:
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [Node.js](https://nodejs.org) (v16 or higher)
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/) or [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Prisma CLI](https://www.prisma.io/docs/getting-started)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/rainame.git
+   cd rainame
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Change env.example to .env
