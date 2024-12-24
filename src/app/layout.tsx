@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description:
       "Rainame is a leading online fashion retailer that offers the latest trends and styles in clothing, shoes, and accessories for men and women. Our mission is to provide our customers with a seamless and enjoyable shopping experience, allowing them to stay ahead of the fashion curve without breaking the bank.",
     url: "https://rainame.vercel.app/",
-    siteName: "sultonoir-chat",
+    siteName: "Rainame",
     images: [
       {
         url: "https://utfs.io/f/0vsSPX9AUvOHeSXoWVN7hsiRrPmF5cQkfzEWqV093Hj7NbJv",
