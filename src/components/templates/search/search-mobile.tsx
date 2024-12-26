@@ -25,7 +25,7 @@ export default function SearchMobile() {
     <>
       <button
         onClick={hanldeToggle}
-        className="relative inline-flex h-8 w-full items-center justify-start gap-4 whitespace-nowrap rounded-[0.5rem] border border-input bg-muted/50 px-4 py-2 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 sm:pr-12 lg:hidden [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+        className="relative inline-flex h-8 w-full items-center justify-start gap-4 whitespace-nowrap rounded-[0.5rem] border border-input bg-muted/50 px-4 py-2 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 sm:pr-12 md:hidden [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       >
         <div className="pointer-events-none flex items-center justify-center text-muted-foreground/80 peer-disabled:opacity-50">
           <Search size={16} strokeWidth={2} />
