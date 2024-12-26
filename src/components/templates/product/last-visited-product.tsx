@@ -48,7 +48,6 @@ export default function LastVisitedProduct() {
               }
               className="flex flex-col gap-2"
             >
-              <h3 className="font-bold ~text-lg/2xl">Last Visited Products</h3>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-6">
                 {products.map((product) => (
                   <CardProduct key={product.id} product={product} />

@@ -8,9 +8,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
 import { SearchRecent } from "../search/search-recent";
 import RecomendPagination from "../recommend/recommend-pagination";
+import { useDialogSearch } from "@/hooks/use-dialog-search";
 
 export function SearchInput() {
-  const [active, setActive] = useState(false);
+  const { active, setActive } = useDialogSearch();
   const [inputvalue, setInputvalue] = useState("");
   const placeholders = ["T-Shirt", "Shirt", "Pants", "Shoes", "Bag"];
   const router = useRouter();

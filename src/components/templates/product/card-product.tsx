@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { type ProductCard } from "@/types";
@@ -5,12 +6,23 @@ import Link from "next/link";
 import TotalRating from "../rating/total-rating";
 import PriceProduct from "./price-product";
 import { BlurImage } from "@/components/ui/blur-image";
+import { useDialogSearch } from "@/hooks/use-dialog-search";
 
 type Props = {
   product: ProductCard;
 };
 
 const CardProduct = ({ product }: Props) => {
+  const { active, setActive } = useDialogSearch();
+
+  const handleForceClose = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    e.stopPropagation();
+    if (active) {
+      setActive(false);
+    }
+  };
   return (
     <Card className="relative rounded-2xl border p-2 shadow-lg dark:border-border/50 dark:bg-muted/50">
       <Link
@@ -18,6 +30,7 @@ const CardProduct = ({ product }: Props) => {
         className="absolute inset-0 z-10"
         prefetch={true}
         title={product.name}
+        onClick={handleForceClose}
       />
       <div className="relative block aspect-9/16 h-auto w-full overflow-hidden rounded-lg p-0">
         {product.productImage.flatMap((img) => (

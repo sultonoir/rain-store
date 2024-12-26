@@ -50,10 +50,11 @@ const PageProduct = ({ data }: Props) => {
         </div>
       </div>
       <ProductRating />
-      <InviewContainer>
+      <InviewContainer className="min-h-[300px]">
         <RecomendInfinite slug={data.slug} category={data.category} />
       </InviewContainer>
-      <InviewContainer>
+      <InviewContainer className="min-h-[300px]">
+        <h3 className="font-bold ~text-lg/2xl">Last Visited Products</h3>
         <LastVisitedProduct />
       </InviewContainer>
     </div>

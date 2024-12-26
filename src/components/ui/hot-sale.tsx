@@ -8,9 +8,23 @@ import {
 import CardProduct from "../templates/product/card-product";
 import { api } from "@/trpc/server";
 
-export async function HotSale() {
+interface Props {
+  sort?:
+    | "hot-sale"
+    | "most-rating"
+    | "latest"
+    | "lowest-price"
+    | "high-price"
+    | undefined;
+  title?: string;
+}
+
+export async function HotSale({
+  sort,
+  title = "You May Like This Product 🥰",
+}: Props) {
   const data = await api.product.page({
-    sort: "hot-sale",
+    sort,
   });
   return (
     <Carousel
@@ -18,7 +32,7 @@ export async function HotSale() {
         align: "start",
       }}
     >
-      <CarouselHeader title="You May Like This Product 🥰" />
+      <CarouselHeader title={title} />
       <CarouselContent>
         {data.products.map((item) => (
           <CarouselItem

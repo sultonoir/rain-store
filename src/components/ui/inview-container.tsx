@@ -9,7 +9,7 @@ export default function InviewContainer({
   className,
 }: InviewContainerProps) {
   const { ref, inView } = useInView({
-    threshold: 1,
+    threshold: 0.5,
     triggerOnce: true,
   });
   return (
