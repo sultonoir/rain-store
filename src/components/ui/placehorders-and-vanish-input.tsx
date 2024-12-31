@@ -220,6 +220,7 @@ export function PlaceholdersAndVanishInput({
       <button
         disabled={!value}
         type="submit"
+        aria-label="subit search"
         className="absolute right-1 top-1/2 z-50 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-sm bg-primary transition duration-200 disabled:bg-muted"
       >
         <motion.svg

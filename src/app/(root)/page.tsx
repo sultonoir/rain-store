@@ -1,10 +1,11 @@
+import LoadingProduct from "@/components/templates/product/loading-product";
 import EmailSubscription from "@/components/ui/email-subscription ";
 import Flow from "@/components/ui/flow";
 import HomeCategory from "@/components/ui/home-category";
 import { HotSale } from "@/components/ui/hot-sale";
 import Promo from "@/components/ui/promo";
 import { type Metadata } from "next";
-import React from "react";
+import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -15,10 +16,14 @@ const Page = () => {
     <main className="container relative z-0 min-h-screen py-5">
       <Promo />
       <section className="my-10 flex flex-col justify-items-center gap-5">
-        <HotSale sort="hot-sale" />
+        <Suspense fallback={<LoadingProduct />}>
+          <HotSale sort="hot-sale" />
+        </Suspense>
         <Flow />
         <HomeCategory />
-        <HotSale sort="most-rating" title="Best Sellers Alert!" />
+        <Suspense>
+          <HotSale sort="most-rating" title="Best Sellers Alert!" />
+        </Suspense>
         <EmailSubscription />
       </section>
     </main>

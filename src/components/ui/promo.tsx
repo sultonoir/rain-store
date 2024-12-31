@@ -86,12 +86,14 @@ const Promo = () => {
         ))}
         <Button
           size="icon"
+          aria-label="button slide left"
           className="swiper-button-prev absolute left-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-accent/40 backdrop-blur-lg hover:bg-accent/50"
         >
           <ChevronLeft size={20} />
         </Button>
         <Button
           size="icon"
+          aria-label="button slide right"
           className="swiper-button-next absolute right-2 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-accent/40 backdrop-blur-lg hover:bg-accent/50"
         >
           <ChevronRight size={20} />

@@ -46,6 +46,7 @@ export default function EmailSubscription() {
             type="email"
           />
           <button
+            aria-label="button subscription email"
             className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full bg-primary text-slate-50 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-opacity-70 dark:focus:ring-offset-0"
             type="submit"
           >

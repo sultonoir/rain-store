@@ -271,6 +271,7 @@ const CarouselHeader = React.forwardRef<
           size="icon"
           className="size-8"
           variant="outline"
+          aria-label="navigate carousel to left"
           disabled={!canScrollPrev}
         >
           <ChevronLeft size={20} onClick={scrollPrev} />
@@ -279,6 +280,7 @@ const CarouselHeader = React.forwardRef<
           size="icon"
           className="size-8"
           variant="outline"
+          aria-label="navigate carousel to right"
           onClick={scrollNext}
           disabled={!canScrollNext}
         >

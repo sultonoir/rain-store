@@ -102,7 +102,7 @@ const HomeCategory = () => {
               src={item.bgImage}
               alt="1"
             />
-            <a href={item.path} className="absolute inset-0 z-10"></a>
+            <a href={item.path} className="absolute inset-0 z-10" aria-label={item.name} />
           </div>
         ))}
       </div>

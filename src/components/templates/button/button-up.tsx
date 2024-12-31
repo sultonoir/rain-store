@@ -10,7 +10,12 @@ export default function ButtonUP() {
   };
   return (
     <div className="fixed bottom-20 right-10 z-20">
-      <Button onClick={handleUp} size="icon" className="rounded-full">
+      <Button
+        aria-label="button scoll to top page"
+        onClick={handleUp}
+        size="icon"
+        className="rounded-full"
+      >
         <ChevronUp />
       </Button>
     </div>

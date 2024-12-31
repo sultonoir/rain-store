@@ -3,12 +3,13 @@
 import { PlaceholdersAndVanishInput } from "@/components/ui/placehorders-and-vanish-input";
 import { useSearch } from "@/hooks/useSearch";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
 import { SearchRecent } from "../search/search-recent";
 import RecomendPagination from "../recommend/recommend-pagination";
 import { useDialogSearch } from "@/hooks/use-dialog-search";
+import { useOutsideClick } from "@/hooks/use-outside-click";
 
 export function SearchInput() {
   const { active, setActive } = useDialogSearch();
@@ -34,18 +35,13 @@ export function SearchInput() {
     router.push("/search" + "?" + createQueryString);
   };
 
-  function handleOnClick(event: MouseEvent) {
+  function handleOnClick(event: MouseEvent | TouchEvent) {
     if (ref.current && !event.composedPath().includes(ref.current)) {
       setActive(false);
     }
   }
 
-  useEffect(() => {
-    document.body.addEventListener("click", handleOnClick);
-    return () => {
-      document.body.removeEventListener("click", handleOnClick);
-    };
-  }, []);
+  useOutsideClick(ref, handleOnClick);
 
   return (
     <div

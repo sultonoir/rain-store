@@ -9,7 +9,7 @@ import { useStore } from "zustand";
 export default function CartButton() {
   const cart = useStore(useCart, (state) => state.cart);
 
-  const count = cart.reduce((cur,acc)=>cur + acc.amount,0)
+  const count = cart.reduce((cur, acc) => cur + acc.amount, 0);
   const { setCartOpen } = useOpenCart();
 
   return (
@@ -17,6 +17,7 @@ export default function CartButton() {
       variant="ghost"
       size="icon"
       className="relative"
+      aria-label="triger dialog cart"
       onClick={setCartOpen}
     >
       <ShoppingBag size={19} />
