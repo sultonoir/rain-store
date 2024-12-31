@@ -200,6 +200,9 @@ export function PlaceholdersAndVanishInput({
         )}
         ref={canvasRef}
       />
+      <label htmlFor="search" className="sr-only">
+        Search
+      </label>
       <input
         onChange={(e) => {
           if (!animating) {
@@ -211,6 +214,7 @@ export function PlaceholdersAndVanishInput({
         ref={inputRef}
         value={value}
         type="text"
+        id="search"
         className={cn(
           "relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black focus:outline-none focus:ring-0 dark:text-white sm:pl-5 sm:text-base",
           animating && "text-transparent dark:text-transparent",
