@@ -10,8 +10,6 @@ import TitleProduct from "./title-product";
 import TotalRating from "../rating/total-rating";
 import BenefitProduct from "./benefit-product";
 import QtyProduct from "./qty-product";
-import InviewContainer from "@/components/ui/inview-container";
-import LastVisitedProduct from "./last-visited-product";
 import RecomendInfinite from "../recommend/recommend-infinite";
 import ProductRating from "../rating/product-rating";
 
@@ -50,13 +48,9 @@ const PageProduct = ({ data }: Props) => {
         </div>
       </div>
       <ProductRating />
-      <InviewContainer className="min-h-[300px]">
+      <div className="min-h-[300px]">
         <RecomendInfinite slug={data.slug} category={data.category} />
-      </InviewContainer>
-      <InviewContainer className="min-h-[300px]">
-        <h3 className="font-bold ~text-lg/2xl">Last Visited Products</h3>
-        <LastVisitedProduct />
-      </InviewContainer>
+      </div>
     </div>
   );
 };

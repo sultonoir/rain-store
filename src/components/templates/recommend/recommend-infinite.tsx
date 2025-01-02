@@ -21,7 +21,7 @@ export default function RecomendInfinite(props: Props) {
     status,
   } = api.product.recommend.useInfiniteQuery(
     {
-      take: 10,
+      take: 6,
       slug: props.slug,
       category: props.category,
     },
