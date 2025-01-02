@@ -3,11 +3,11 @@ import { api } from "@/trpc/react";
 import { type SearchProductsClient } from "@/types";
 import React from "react";
 import CardProduct from "../product/card-product";
-import { SearchLoading } from "./search-loading";
 import FilterHeader from "../filter/filter-header";
 import { NotFoundProduct } from "../product/notfound-product";
 import Item from "@/components/ui/pagination-with-links";
 import { pathnameToString } from "@/lib/pathname";
+import LoadingProduct from "../product/loading-product";
 
 export default function SearchProductPage({
   searchParams,
@@ -27,14 +27,16 @@ export default function SearchProductPage({
       {(() => {
         switch (status) {
           case "pending":
-            return <SearchLoading />;
+            return (
+              <LoadingProduct className="grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-4" />
+            );
           case "error":
-            return <NotFoundProduct />;
+            return <NotFoundProduct titile={title} />;
           case "success":
             return (
               <React.Fragment>
                 {data.products.length < 1 ? (
-                  <NotFoundProduct />
+                  <NotFoundProduct titile={title} />
                 ) : (
                   <div className="flex h-full flex-col gap-4">
                     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
