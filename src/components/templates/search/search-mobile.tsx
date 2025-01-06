@@ -53,8 +53,8 @@ function SearchMobileContent({ close }: Props) {
   const handelSubumit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const queryParams = new URLSearchParams(searchParams?.toString());
-    queryParams.delete("name");
-    queryParams.set("name", nameQuery);
+    queryParams.delete("q");
+    queryParams.set("q", nameQuery);
     const path = `/search?${queryParams.toString()}`;
     add({
       id: Date().toString(),
