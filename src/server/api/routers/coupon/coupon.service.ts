@@ -1,4 +1,4 @@
-import { generateId } from "lucia";
+import { generateId } from "better-auth";
 import { type ProtectedTRPCContext } from "../../trpc";
 import { type GetCoupon, type CreateCouponSchema } from "./coupon.input";
 import { format } from "date-fns";
@@ -17,7 +17,6 @@ export const createCoupon = (
   return ctx.db.coupon.create({
     data: {
       ...input,
-      id: generateId(10),
       code,
       desc,
     },

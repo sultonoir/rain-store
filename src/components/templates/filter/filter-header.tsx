@@ -1,7 +1,7 @@
 "use client";
 
 import { SortCombobox } from "@/components/ui/sort-combobox";
-import React from "react";
+import React, { Suspense } from "react";
 import { FilterMobileButton } from "./filter-mobile";
 
 interface FilterHeaderProps {
@@ -28,7 +28,9 @@ export default function FilterHeader({ title, count }: FilterHeaderProps) {
       </div>
       <div className="hidden items-center gap-2 md:flex">
         <FilterMobileButton />
-        <SortCombobox />
+        <Suspense>
+          <SortCombobox />
+        </Suspense>
       </div>
     </section>
   );

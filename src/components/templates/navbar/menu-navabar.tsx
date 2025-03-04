@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -85,7 +85,9 @@ export const MenuNavbar = ({ className }: Props) => {
       >
         <FilterMobileButton />
         <div className="lg:hidden">
-          <SortCombobox />
+          <Suspense>
+            <SortCombobox />
+          </Suspense>
         </div>
       </div>
     </div>

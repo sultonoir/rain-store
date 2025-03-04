@@ -6,7 +6,6 @@ import {
   type UpdateInput,
 } from "./user.input";
 import { type Prisma } from "@prisma/client";
-import { Scrypt } from "lucia";
 
 export const getUser = async (
   ctx: ProtectedTRPCContext,
@@ -62,8 +61,6 @@ export async function Update({
   if (name) {
     conditions.name = name;
   }
-
-  
 
   const userUpdate = await ctx.db.user.update({
     where: {

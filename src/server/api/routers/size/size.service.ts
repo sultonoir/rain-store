@@ -2,7 +2,7 @@ import type * as input from "./size.input";
 import fs from "fs";
 import path from "path";
 import sizes from "@/lib/sizes";
-import { generateId } from "lucia";
+import { generateId } from "better-auth";
 type Sizes = {
   id: string;
   value: string;

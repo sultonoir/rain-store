@@ -1,4 +1,3 @@
-import { generateId } from "lucia";
 import fs from "fs";
 import path from "path";
 import { type TRPCContext, type ProtectedTRPCContext } from "../../trpc";
@@ -11,11 +10,9 @@ export const createCategory = async (
   ctx: ProtectedTRPCContext,
   { name }: PostCategorySchema,
 ) => {
-  const id = generateId(10);
   return await ctx.db.category.create({
     data: {
       name,
-      id,
     },
   });
 };

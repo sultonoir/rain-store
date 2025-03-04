@@ -1,6 +1,6 @@
 "use client";
 import { categories } from "@/lib/constants";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -39,7 +39,9 @@ export function MenuNavbarMobile({ className }: Props) {
           })}
         >
           <FilterMobileButton />
-          <SortCombobox />
+          <Suspense>
+            <SortCombobox />
+          </Suspense>
         </div>
       </div>
       <DrawerContent>

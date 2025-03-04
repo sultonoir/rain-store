@@ -62,7 +62,7 @@ export type MenuProfileProps = {
 export type Option = Record<"value" | "label", string> & Record<string, string>;
 
 export type ProductCard = Product & {
-  productImage: ProductImage[];
+  productImage: ProductImage;
   rating: number;
 };
 

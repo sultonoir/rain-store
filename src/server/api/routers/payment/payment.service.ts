@@ -1,6 +1,5 @@
 import { type TRPCContext } from "../../trpc";
 import type * as input from "./payment.input";
-import { generateId } from "lucia";
 import { TRPCError } from "@trpc/server";
 import { NotifitoAdmin } from "../notifi/notifi.service";
 import { db } from "@/server/db";
@@ -84,7 +83,6 @@ async function createCheckout(
 ) {
   return ctx.db.checkout.create({
     data: {
-      id: generateId(10),
       userId: "",
       price: total,
       quantity,
@@ -96,7 +94,6 @@ async function createCheckout(
 async function createCheckoutItems(cart: input.Cart[], checkoutId: string) {
   return db.checkoutItem.createManyAndReturn({
     data: cart.map((item) => ({
-      id: generateId(10),
       checkoutId,
       productId: item.productId,
       quantity: item.amount,
@@ -153,7 +150,6 @@ async function updateStock({
             data: {
               amount: item.amount,
               productId: item.productId,
-              id: generateId(10),
               name,
               email,
             },

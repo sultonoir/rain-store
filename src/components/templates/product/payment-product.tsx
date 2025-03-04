@@ -8,8 +8,8 @@ import useCount from "@/hooks/use-count";
 import { LoadingButton } from "../button/loading-button";
 import { useLastVisited } from "@/hooks/use-last-visited";
 import { type ProductPage } from "@/types";
-import { generateId } from "lucia";
 import { useCart } from "@/hooks/use-cart";
+import { generateId } from "better-auth";
 
 interface Props {
   data: ProductPage;

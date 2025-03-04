@@ -1,4 +1,3 @@
-import { generateId } from "lucia";
 import { type TRPCContext } from "../../trpc";
 import {
   type SlugProductSchema,
@@ -34,7 +33,6 @@ export const postProduct = async (
       slug,
     },
     create: {
-      id: generateId(10),
       name: title,
       slug,
       price,
@@ -44,7 +42,6 @@ export const postProduct = async (
       priceAfterDiscount,
     },
     update: {
-      id: generateId(10),
       name: title,
       slug,
       price,
@@ -60,7 +57,6 @@ export const postProduct = async (
 
   const productImages = await ctx.db.productImage.createManyAndReturn({
     data: images.map((item) => ({
-      id: generateId(10),
       url: item,
       thumbnail: "",
       productId: product.id,
@@ -76,7 +72,6 @@ export const postProduct = async (
 
   const stocks = await ctx.db.stockAndSize.createManyAndReturn({
     data: stockAdnSize.map((item) => ({
-      id: generateId(10),
       amount: parseInt(item.stock),
       name: item.size,
       productId: product.id,
@@ -262,7 +257,7 @@ export async function searchProducts({
       },
       take,
       skip,
-      cacheStrategy: { ttl: 60, swr: 60, tags: ["find-all"] },
+      cacheStrategy: { ttl: 60, swr: 60, tags: ["find_all"] },
     }),
     db.product.count({ where: whereClause }),
   ]);
@@ -282,7 +277,7 @@ export async function searchProducts({
     cacheStrategy: {
       ttl: 60,
       swr: 60,
-      tags: ["rating-find"],
+      tags: ["rating_find"],
     },
   });
 
@@ -306,6 +301,7 @@ export async function searchProducts({
       sells.find((sell) => sell.productId === item.id)?._sum.amount ?? 0;
     return {
       ...item,
+      productImage: item.productImage[0]!,
       rating: productRating,
       selling: mostSelling,
     };

@@ -1,8 +1,8 @@
-import { generateId } from "lucia";
 import type * as input from "./notifi.input";
 import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 import { type ProtectedTRPCContext } from "../../trpc";
+import { generateId } from "better-auth";
 
 export async function CreateNotifi(input: input.CreateNotifi) {
   const createNotifi = await db.notifi.create({
