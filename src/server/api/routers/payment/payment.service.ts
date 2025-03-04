@@ -85,8 +85,7 @@ async function createCheckout(
   return ctx.db.checkout.create({
     data: {
       id: generateId(10),
-      name,
-      email,
+      userId: "",
       price: total,
       quantity,
       status: "paid",

@@ -8,7 +8,7 @@ import "./src/env.js";
 const config = {
   reactStrictMode: true,
   images: {
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: "https",
@@ -29,6 +29,14 @@ const config = {
       {
         protocol: "https",
         hostname: "assets.aceternity.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ik.imagekit.io",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.jsdelivr.net",
       },
     ],
   },

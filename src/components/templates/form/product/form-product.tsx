@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { FieldCategory } from "./field-category";
-import React from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,15 +21,14 @@ import FieldImage from "./field-image";
 import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import FieldSubcategory from "./field-subcategory";
 import Link from "next/link";
-import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { CreateProductSchema } from "@/server/api/routers/product/product.input";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import sizes from "@/lib/sizes";
 import { LoadingButton } from "../../button/loading-button";
+import React from "react";
+import sizes from "@/lib/sizes";
 
 export function FormProduct() {
   const Editor = React.useMemo(
@@ -63,7 +60,6 @@ export function FormProduct() {
     },
   });
 
-  const { startUpload } = useUploadThing("media");
   const addProduct = api.product.post.useMutation({
     onError: (e) => {
       toast.error(e.message);
@@ -73,19 +69,11 @@ export function FormProduct() {
     },
   });
   async function onSubmit(data: CreateProductSchema) {
-    let resultImages: string[] = [];
-    const uploadimages = await startUpload(data.images);
-    if (uploadimages) {
-      resultImages = uploadimages.map((item) => item.url);
-    }
-
     await addProduct.mutateAsync({
       ...data,
-      images: resultImages,
+      images: [],
     });
   }
-
-  const category = form.watch("category");
 
   const { fields, append, remove } = useFieldArray({
     name: "stockAdnSize",
@@ -228,7 +216,7 @@ export function FormProduct() {
               <CardTitle>Categories</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2 lg:flex-row">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="category"
                 render={({ field }) => (
@@ -262,7 +250,7 @@ export function FormProduct() {
                     </FormItem>
                   )}
                 />
-              )}
+              )} */}
             </CardContent>
           </Card>
           <Card>

@@ -1,24 +1,14 @@
-import "server-only";
-
-import { EmailVerificationTemplate } from "./templates/email-verification";
-import { ResetPasswordTemplate } from "./templates/reset-password";
 import { render } from "@react-email/components";
-import { env } from "@/env";
-import { EMAIL_SENDER } from "@/lib/constants";
 import { createTransport, type TransportOptions } from "nodemailer";
 import type { ComponentProps } from "react";
-import { logger } from "../logger";
+import { MagicLinkEmail } from "./templates/MagicLink";
 
 export enum EmailTemplate {
-  EmailVerification = "EmailVerification",
-  PasswordReset = "PasswordReset",
+  MagicLink = "MagicLink",
 }
 
 export type PropsMap = {
-  [EmailTemplate.EmailVerification]: ComponentProps<
-    typeof EmailVerificationTemplate
-  >;
-  [EmailTemplate.PasswordReset]: ComponentProps<typeof ResetPasswordTemplate>;
+  [EmailTemplate.MagicLink]: ComponentProps<typeof MagicLinkEmail>;
 };
 
 const getEmailTemplate = <T extends EmailTemplate>(
@@ -26,22 +16,11 @@ const getEmailTemplate = <T extends EmailTemplate>(
   props: PropsMap[NoInfer<T>],
 ) => {
   switch (template) {
-    case EmailTemplate.EmailVerification:
+    case EmailTemplate.MagicLink:
       return {
-        subject: "Verify your email address",
+        subject: "Signin to Rizal Store",
         body: render(
-          <EmailVerificationTemplate
-            {...(props as PropsMap[EmailTemplate.EmailVerification])}
-          />,
-        ),
-      };
-    case EmailTemplate.PasswordReset:
-      return {
-        subject: "Reset your password",
-        body: render(
-          <ResetPasswordTemplate
-            {...(props as PropsMap[EmailTemplate.PasswordReset])}
-          />,
+          <MagicLinkEmail {...(props as PropsMap[EmailTemplate.MagicLink])} />,
         ),
       };
     default:
@@ -50,34 +29,29 @@ const getEmailTemplate = <T extends EmailTemplate>(
 };
 
 const smtpConfig = {
-  host: env.SMTP_HOST,
-  port: env.SMTP_PORT,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
   auth: {
-    user: env.SMTP_USER,
-    pass: env.SMTP_PASSWORD,
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
   },
 };
 
 const transporter = createTransport(smtpConfig as TransportOptions);
+
 export const sendMail = async <T extends EmailTemplate>(
   to: string,
   template: T,
   props: PropsMap[NoInfer<T>],
 ) => {
-  if (env.MOCK_SEND_EMAIL) {
-    logger.info(
-      "Email sent to:",
-      to,
-      "with template:",
-      template,
-      "and props:",
-      props,
-    );
-  }
-
   const { subject, body } = getEmailTemplate(template, props);
 
   const html = await body; // Tambahkan await di sini
 
-  return transporter.sendMail({ from: EMAIL_SENDER, to, subject, html });
+  return transporter.sendMail({
+    from: '"Rizal Store" <noreply@acme.com>',
+    to,
+    subject,
+    html,
+  });
 };

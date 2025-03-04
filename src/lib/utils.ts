@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -59,10 +58,6 @@ export function formatPrice(
     notation: options.notation ?? "compact",
     ...options,
   }).format(Number(price));
-}
-
-export function absoluteUrl(path: string) {
-  return new URL(path, env.NEXT_PUBLIC_APP_URL).href;
 }
 
 export function extractUsername(email: string) {

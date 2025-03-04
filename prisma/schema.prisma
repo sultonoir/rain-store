@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,80 +11,82 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-enum Role {
-  admin
-  user
-  demo
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id                     String                   @id @unique @default(cuid())
-  name                   String
-  email                  String                   @unique
-  emailVerification      Boolean                  @default(false)
-  hashedPassword         String?
-  image                  String?
-  role                   Role                     @default(user)
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @default(now())
-  Sessions               Sessions[]
-  EmailVerificationCodes EmailVerificationCodes[]
-  PasswordResetTokens    PasswordResetTokens[]
-  Oauth                  Oauth[]
-  Notifi                 Notifi[]
-  CouponConsume          CouponConsume[]
-  notifiRead             NotifiRead[]
+  id            String          @id @default(nanoid(10))
+  email         String          @unique
+  name          String?
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+  isAnonymous   Boolean?
+  sessions      Session[]
+  accounts      Account[]
+  notifi        Notifi[]
+  notifiRead    NotifiRead[]
+  couponConsume CouponConsume[]
+  rating        Rating[]
+  checkout      Checkout[]
+  complain      Complain[]
 
-  @@index([email], type: Hash)
-  @@index([id], type: Hash)
+  @@map("user")
 }
 
-model Sessions {
-  id        String   @id @unique @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-
-  @@index([userId], type: Hash)
-}
-
-model EmailVerificationCodes {
-  id        String   @id
-  email     String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  code      String
-  expiresAt DateTime
-
-  @@index([userId], type: Hash)
-}
-
-model PasswordResetTokens {
-  id        String   @id @unique @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt DateTime
-
-  @@index([userId], type: Hash)
-}
-
-model Oauth {
-  id             String   @id @unique @default(cuid())
-  provider       String
-  providerUserId String
-  accessToken    String   @db.Text
-  refreshToken   String?  @db.Text
+model Session {
+  id             String   @id
   expiresAt      DateTime
+  token          String
+  createdAt      DateTime
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
   userId         String
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
 
-  @@index([userId], type: Hash)
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }
 
 model Product {
-  id                 String            @id @unique @default(cuid())
+  id                 String            @id @unique @default(nanoid(10))
   name               String
   summary            String            @db.Text
   slug               String            @unique
@@ -97,14 +105,16 @@ model Product {
   promo              PromoAndProduct[]
   selling            Selling[]
 
-  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama
-  @@index([price], type: BTree) // Efisien untuk pencarian berdasarkan rentang harga
+  // Efisien untuk pencarian berdasarkan nama
+  // Efisien untuk pencarian berdasarkan rentang harga
+  @@index([name], type: Hash)
+  @@index([price], type: BTree)
   @@index([slug], type: Hash)
   @@index([discount], type: BTree)
 }
 
 model ProductImage {
-  id        String   @id @unique @default(cuid())
+  id        String   @id @unique @default(nanoid(10))
   url       String   @db.Text
   thumbnail String   @db.Text
   caption   String?
@@ -118,7 +128,7 @@ model ProductImage {
 }
 
 model StockAndSize {
-  id        String   @id @unique @default(cuid())
+  id        String   @id @unique @default(nanoid(10))
   name      String
   amount    Int
   createdAt DateTime @default(now())
@@ -126,23 +136,25 @@ model StockAndSize {
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan ukuran
+  // Efisien untuk pencarian berdasarkan ukuran
+  @@index([name], type: Hash)
   @@index([productId], type: Hash)
 }
 
 model Category {
-  id             String           @id @unique @default(cuid())
+  id             String           @id @unique @default(nanoid(10))
   name           String           @unique
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   subcategories  Subcategory[]
   productDetails ProductDetails[]
 
-  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama kategori
+  // Efisien untuk pencarian berdasarkan nama kategori
+  @@index([name], type: Hash)
 }
 
 model Subcategory {
-  id             String           @id @unique @default(cuid())
+  id             String           @id @unique @default(nanoid(10))
   name           String           @unique
   categoryId     String
   category       Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -150,7 +162,8 @@ model Subcategory {
   updatedAt      DateTime         @updatedAt
   productDetails ProductDetails[]
 
-  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama subkategori
+  // Efisien untuk pencarian berdasarkan nama subkategori
+  @@index([name], type: Hash)
   @@index([categoryId], type: Hash)
 }
 
@@ -162,13 +175,15 @@ model ProductDetails {
   category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
+  // Indeks untuk pencarian berdasarkan kategori
+  // Indeks untuk pencarian berdasarkan subkategori
   @@id([productId, subcategoryId, categoryId])
-  @@index([categoryId], type: Hash) // Indeks untuk pencarian berdasarkan kategori
-  @@index([subcategoryId], type: Hash) // Indeks untuk pencarian berdasarkan subkategori
+  @@index([categoryId], type: Hash)
+  @@index([subcategoryId], type: Hash)
 }
 
 model Selling {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @unique @default(nanoid(10))
   amount    Int
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -182,13 +197,13 @@ model Selling {
 }
 
 model Rating {
-  id        String   @id @unique @default(cuid())
+  id        String   @id @unique @default(nanoid(10))
   value     Float
-  name      String
-  email     String
   message   String
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -205,11 +220,11 @@ enum CheckoutStatus {
 }
 
 model Checkout {
-  id          String         @id @unique @default(cuid())
+  id          String         @id @unique @default(nanoid(10))
   price       Float
   status      CheckoutStatus @default(pending)
-  name        String         @default("")
-  email       String         @default("")
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   quantity    Int
   Notifi      Notifi[]
   Complain    Complain[]
@@ -221,7 +236,7 @@ model Checkout {
 }
 
 model CheckoutItem {
-  id         String   @id @unique @default(cuid())
+  id         String   @id @unique @default(nanoid(10))
   quantity   Int
   price      Float
   size       String
@@ -248,15 +263,13 @@ enum NotificationStatus {
 }
 
 model Notifi {
-  id         String             @id @unique @default(cuid())
+  id         String             @id @unique @default(nanoid(10))
   status     NotificationStatus @default(OrderPending)
   createdAt  DateTime           @default(now())
   message    String
   checkoutId String?
   checkout   Checkout?          @relation(fields: [checkoutId], references: [id], onDelete: Cascade)
   userId     String?
-  issuerId   String?
-  link       String?
   user       User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   notifiRead NotifiRead[]
 
@@ -265,7 +278,7 @@ model Notifi {
 }
 
 model NotifiRead {
-  id        String   @id @default(cuid())
+  id        String   @id @default(nanoid(10))
   userId    String?
   user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   isRead    Boolean  @default(false)
@@ -280,9 +293,9 @@ model NotifiRead {
 }
 
 model Complain {
-  id         String   @id @unique @default(cuid())
-  message    String   @db.Text
-  email      String
+  id         String   @id @unique @default(nanoid(10))
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   checkoutId String
   checkout   Checkout @relation(fields: [checkoutId], references: [id])
   Product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -290,14 +303,14 @@ model Complain {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@index([email], type: Hash)
+  @@index([userId], type: Hash)
   @@index([id], type: Hash)
   @@index([productId], type: Hash)
   @@index([checkoutId], type: Hash)
 }
 
 model Promo {
-  id        String            @id @unique @default(uuid())
+  id        String            @id @unique @default(nanoid(10))
   title     String
   image     String
   slug      String
@@ -318,7 +331,7 @@ model PromoAndProduct {
 }
 
 model Coupon {
-  id            String          @id @unique @default(uuid())
+  id            String          @id @unique @default(nanoid(10))
   code          String
   title         String
   amount        Int?
@@ -333,7 +346,6 @@ model Coupon {
 }
 
 model CouponConsume {
-  id       String @id @unique @default(cuid())
   couponId String
   coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
   userId   String
@@ -342,7 +354,21 @@ model CouponConsume {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@id([couponId, userId])
   @@index([couponId], type: Hash)
   @@index([userId], type: Hash)
-  @@index([id], type: Hash)
+}
+
+model FlashSale {
+  id        String   @id @default(cuid())
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        String   @id @default(nanoid(10))
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

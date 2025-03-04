@@ -1,9 +1,7 @@
-import { type Rating } from "@prisma/client";
 import React from "react";
 
 type Props = {
   title: string;
-  rating: Rating[];
 };
 
 const TitleProduct = (props: Props) => {

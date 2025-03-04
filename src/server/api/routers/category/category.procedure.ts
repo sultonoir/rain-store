@@ -22,8 +22,4 @@ export const categoryProcedure = createTRPCRouter({
   remove: protectedProcedure
     .input(input.RemoveCategoryInput)
     .mutation(async ({ input, ctx }) => service.removeById({ ctx, input })),
-
-  upload: protectedProcedure.mutation(async ({ ctx }) =>
-    service.uploadCategories({ ctx }),
-  ),
 });

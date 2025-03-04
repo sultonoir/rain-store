@@ -63,10 +63,7 @@ export async function Update({
     conditions.name = name;
   }
 
-  if (password) {
-    const hashedPassword = await new Scrypt().hash(password);
-    conditions.hashedPassword = hashedPassword;
-  }
+  
 
   const userUpdate = await ctx.db.user.update({
     where: {

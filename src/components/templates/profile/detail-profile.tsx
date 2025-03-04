@@ -1,6 +1,5 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import { useSession } from "@/provider/session-provider";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +16,11 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "../button/loading-button";
+import { useSession } from "@/lib/auth-client";
 
 export default function DetailProfile() {
-  const { user } = useSession();
+  const { data } = useSession();
+  const user = data?.user
   return (
     <div className="flex flex-col gap-1">
       <h2 className="font-bold ~text-lg/3xl">Change biodata</h2>

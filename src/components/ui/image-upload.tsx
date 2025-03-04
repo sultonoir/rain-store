@@ -61,7 +61,7 @@ import React from "react";
 import { useDropzone, type FileWithPath } from "react-dropzone";
 import { ImageCropper } from "./crop-image";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { useSession } from "@/provider/session-provider";
+import { useSession } from "@/lib/auth-client";
 
 export type FileWithPreview = FileWithPath & {
   preview: string;
@@ -72,7 +72,8 @@ const accept = {
 };
 
 const ImageUpload = () => {
-  const { user } = useSession();
+  const { data } = useSession();
+  const user = data?.user;
   const [selectedFile, setSelectedFile] =
     React.useState<FileWithPreview | null>(null);
   const [isDialogOpen, setDialogOpen] = React.useState(false);

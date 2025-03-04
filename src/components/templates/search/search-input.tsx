@@ -7,7 +7,6 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useCreateQueryString from "@/hooks/useCreateQueryString";
 import { SearchRecent } from "../search/search-recent";
-import RecomendPagination from "../recommend/recommend-pagination";
 import { useDialogSearch } from "@/hooks/use-dialog-search";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 
@@ -69,11 +68,6 @@ export function SearchInput() {
             <div className="mt-2 h-max rounded-lg border bg-background p-2">
               <div className="space-y-2">
                 <SearchRecent close={() => setActive(false)} />
-                <RecomendPagination
-                  take={4}
-                  layoutClassName="xl:grid-cols-4"
-                  title="Recommendations Product"
-                />
               </div>
             </div>
           </motion.div>

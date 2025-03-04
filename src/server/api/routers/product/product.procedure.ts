@@ -14,17 +14,7 @@ export const productProcedure = createTRPCRouter({
     .input(input.slugProductInput)
     .query(({ ctx, input }) => service.getBySlug(ctx, input)),
 
-  list: publicProcedure.query(({ ctx }) => service.listProduct(ctx)),
-
-  recommend: publicProcedure
-    .input(input.RecommendInput)
-    .query(async ({ ctx, input }) => service.recommend({ ctx, input })),
-
   search: publicProcedure
     .input(input.SearchProductsParams)
     .query(async ({ input, ctx }) => service.searchProducts({ ctx, input })),
-
-  page: publicProcedure
-    .input(input.SearchProductsParams)
-    .query(async ({ input, ctx }) => service.PageSection({ ctx, input })),
 });

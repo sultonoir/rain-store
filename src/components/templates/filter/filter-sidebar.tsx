@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import FilterInstalled from "./filter-installed";
 import FilterCategory from "./filter-category";
-import FilterSubcategory from "./filter-subcategory";
 import { FilterPrice } from "./filter-price";
 import { FilterDiscount } from "./filter-discount";
 import { FilterRating } from "./filter-rating";
@@ -20,7 +19,6 @@ export default function FilterSidebar({ className, ...props }: Props) {
     >
       <FilterInstalled />
       <FilterCategory />
-      <FilterSubcategory />
       <FilterPrice />
       <FilterDiscount />
       <FilterRating />

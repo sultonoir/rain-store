@@ -8,7 +8,6 @@ import {
   type PostSubCategorySchema,
 } from "./subcategory.input";
 import { TRPCError } from "@trpc/server";
-import subcategory from "@/lib/subcategory";
 
 export const createSubCategory = async (
   ctx: ProtectedTRPCContext,
@@ -87,15 +86,5 @@ export async function removeSub({
     where: {
       id: input.id,
     },
-  });
-}
-
-export async function uploadsub(ctx: ProtectedTRPCContext) {
-  return await ctx.db.subcategory.createManyAndReturn({
-    data: subcategory.map((item) => ({
-      categoryId: item.categoryId,
-      name: item.name,
-      id: item.id,
-    })),
   });
 }

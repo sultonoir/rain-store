@@ -20,7 +20,6 @@ import { type FileWithPath } from "react-dropzone";
 import "react-image-crop/dist/ReactCrop.css";
 import { ImagePlus, Trash2Icon, UploadIcon } from "lucide-react";
 import { Label } from "./label";
-import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { LoadingButton } from "../templates/button/loading-button";
 import { useRouter } from "next/navigation";
@@ -43,7 +42,6 @@ export function ImageCropper({
   selectedFile,
   setSelectedFile,
 }: ImageCropperProps) {
-  const { startUpload } = useUploadThing("media");
   const [loading, setLoading] = useState(false);
   const aspect = 1; // Set aspect ratio (1:1)
 
@@ -140,9 +138,7 @@ export function ImageCropper({
   const onCrop = async (): Promise<void> => {
     setLoading(true);
     try {
-      const images = await startUpload([croppedFile!]);
-      const image = images?.at(0)?.url ?? "";
-      mutate({ image });
+      mutate({});
     } catch (error) {
       const err = error as Error;
       alert(`Something went wrong! ${err.message}`);

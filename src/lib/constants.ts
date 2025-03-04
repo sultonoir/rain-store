@@ -1,7 +1,7 @@
-export const APP_TITLE = "Rainame";
+export const APP_TITLE = "Rizal Store";
 export const DATABASE_PREFIX = "acme";
 export const TEST_DB_PREFIX = "test_acme";
-export const EMAIL_SENDER = '"Rainame" <noreply@acme.com>';
+export const EMAIL_SENDER = '"Rizal Store" <noreply@acme.com>';
 
 export enum Paths {
   Home = "/",
@@ -71,7 +71,7 @@ export const categories = [
     subcategories: [
       {
         id: "m3crvmdfkt",
-        name: "basic T-shirt",
+        name: "basic t-shirt",
         description: "Simple and classic T-shirt design",
       },
       {

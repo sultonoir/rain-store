@@ -7,12 +7,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { logout } from "@/lib/auth/actions";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LoadingButton } from "./loading-button";
 import { APP_TITLE } from "@/lib/constants";
+import { authClient } from "@/lib/auth-client";
 
 export const SignoutButton = () => {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ export const SignoutButton = () => {
   const handleSignout = async () => {
     setIsLoading(true);
     try {
-      await logout();
+      await authClient.signOut();
       toast.success("Signed out successfully");
     } catch (error) {
       if (error instanceof Error) {

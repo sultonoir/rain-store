@@ -49,7 +49,6 @@ const Promo = () => {
   return (
     <>
       <Swiper
-        cssMode={true}
         loop={true}
         navigation={{
           prevEl: ".swiper-button-prev",

@@ -6,7 +6,6 @@ import {
   type RemoveCategoryInput,
   type PostCategorySchema,
 } from "./category.input";
-import categories from "@/lib/categories";
 
 export const createCategory = async (
   ctx: ProtectedTRPCContext,
@@ -67,15 +66,5 @@ export const removeById = async ({
     where: {
       id: input.id,
     },
-  });
-};
-
-export const uploadCategories = async ({
-  ctx,
-}: {
-  ctx: ProtectedTRPCContext;
-}) => {
-  return await ctx.db.category.createManyAndReturn({
-    data: categories,
   });
 };

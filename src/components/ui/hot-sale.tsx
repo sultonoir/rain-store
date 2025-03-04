@@ -23,7 +23,7 @@ export async function HotSale({
   sort,
   title = "You May Like This Product 🥰",
 }: Props) {
-  const data = await api.product.page({
+  const data = await api.product.search({
     sort,
   });
   return (

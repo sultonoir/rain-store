@@ -8,32 +8,31 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import { APP_TITLE } from "@/lib/constants";
 
 export interface ResetPasswordTemplateProps {
   link: string;
 }
 
-export const ResetPasswordTemplate = ({ link }: ResetPasswordTemplateProps) => {
+export const MagicLinkEmail = ({ link }: ResetPasswordTemplateProps) => {
   return (
     <Html>
       <Head />
-      <Preview>Reset your password</Preview>
+      <Preview>Magic link email</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section>
-            <Text style={title}>{APP_TITLE}</Text>
+            <Text style={title}>Rizal Store</Text>
             <Text style={text}>Hi,</Text>
             <Text style={text}>
-              Someone recently requested a password change for your {APP_TITLE}{" "}
-              account. If this was you, you can set a new password here:
+              Welcome to Rizal Store, the fashion brand offering stylish and
+              high-quality apparel for every occasion. Discover trendsetting
+              designs and timeless elegance that redefine your wardrobe.
             </Text>
             <Button style={button} href={link}>
-              Reset password
+              Get started
             </Button>
             <Text style={text}>
-              If you don&apos;t want to change your password or didn&apos;t
-              request this, just ignore and delete this message.
+              If you didn&apos;t request this, please ignore this email.
             </Text>
             <Text style={text}>
               To keep your account secure, please don&apos;t forward this email

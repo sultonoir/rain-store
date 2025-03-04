@@ -6,7 +6,6 @@ import CardProduct from "../product/card-product";
 import FilterHeader from "../filter/filter-header";
 import { NotFoundProduct } from "../product/notfound-product";
 import Item from "@/components/ui/pagination-with-links";
-import { pathnameToString } from "@/lib/pathname";
 import LoadingProduct from "../product/loading-product";
 
 export default function SearchProductPage({
@@ -14,7 +13,7 @@ export default function SearchProductPage({
   title,
   params,
 }: SearchProductsClient) {
-  const sub = pathnameToString(params?.itemId ?? "");
+  const sub = params?.itemId ?? "";
   const { data, status } = api.product.search.useQuery({
     ...searchParams,
     category: params?.categoryId ?? searchParams.category,
@@ -23,7 +22,7 @@ export default function SearchProductPage({
 
   return (
     <main className="flex min-h-[calc(100dvh-130px)] w-full flex-col gap-3">
-      <FilterHeader title={title} count={data?.count ?? 0} />
+      {/* <FilterHeader title={title} count={data?.count ?? 0} /> */}
       {(() => {
         switch (status) {
           case "pending":
@@ -44,11 +43,11 @@ export default function SearchProductPage({
                         <CardProduct key={item.id} product={item} />
                       ))}
                     </div>
-                    <Item
+                    {/* <Item
                       pageSize={10}
                       totalCount={data.count}
                       className="mt-auto justify-end"
-                    />
+                    /> */}
                   </div>
                 )}
               </React.Fragment>

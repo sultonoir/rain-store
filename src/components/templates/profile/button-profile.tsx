@@ -9,12 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AdminMenulist, UserMenulist } from "@/lib/constants";
-import { useSession } from "@/provider/session-provider";
 import { MenuProfile } from "./menu-profile";
 import React from "react";
+import { useSession } from "@/lib/auth-client";
 
 export function ButtonProfile() {
-  const { user } = useSession();
+  const { data } = useSession();
+  const user = data?.user;
   const menulist = user?.role === "admin" ? AdminMenulist : UserMenulist;
   return (
     <DropdownMenu>

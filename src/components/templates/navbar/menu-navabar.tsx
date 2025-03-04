@@ -13,7 +13,6 @@ import { categories } from "@/lib/constants";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { MenuNavbarMobile } from "./menu-navbar-mobile";
-import { stringToPathname } from "@/lib/pathname";
 import { FilterMobileButton } from "../filter/filter-mobile";
 import { SortCombobox } from "@/components/ui/sort-combobox";
 import { useShow } from "@/hooks/use-show";
@@ -45,7 +44,7 @@ export const MenuNavbar = ({ className }: Props) => {
                     <NavigationMenuLink asChild>
                       <Link
                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                        href={`/p/${category.name}`}
+                        href={`/products/${category.name}`}
                       >
                         <div className="mb-2 mt-4 text-lg font-medium capitalize">
                           {category.name}
@@ -60,7 +59,7 @@ export const MenuNavbar = ({ className }: Props) => {
                     {category.subcategories.map((sub) => (
                       <NavigationMenuLink asChild key={sub.id}>
                         <Link
-                          href={`/p/${category.name}/${stringToPathname(sub.name)}`}
+                          href={`/products/${category.name}/${sub.name}`.toLowerCase()}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <div className="text-sm font-medium capitalize leading-none">

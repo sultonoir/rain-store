@@ -19,8 +19,4 @@ export const subcategoryProcedure = createTRPCRouter({
   removeById: protectedProcedure
     .input(input.RemoveSub)
     .mutation(service.removeSub),
-
-  upload: protectedProcedure.mutation(async ({ ctx }) =>
-    service.uploadsub(ctx),
-  ),
 });

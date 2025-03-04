@@ -12,7 +12,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { stringToPathname } from "@/lib/pathname";
 import { FilterMobileButton } from "../filter/filter-mobile";
 import { SortCombobox } from "@/components/ui/sort-combobox";
 import { useShow } from "@/hooks/use-show";
@@ -72,7 +71,7 @@ function FilterCategory({ onClose }: FilterCategoryProps) {
           </Link>
           {item.subcategories.map((subitem) => (
             <Link
-              href={`/p/${item.name}/${stringToPathname(subitem.name)}`}
+              href={`/p/${item.name}/${subitem.name}`}
               className="mx-3.5 rounded-lg px-2.5 py-1 text-sm capitalize leading-normal hover:bg-accent"
               onClick={onClose}
               key={subitem.id}

@@ -24,25 +24,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useSession } from "@/provider/session-provider";
 import UserAvatar from "../user/user-avatar";
-import { logout } from "@/lib/auth/actions";
 import { toast } from "sonner";
+import { useSession } from "@/lib/auth-client";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { user } = useSession();
-
+  const { data } = useSession();
+  const user = data?.user;
   const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Something went wrong");
-      }
-    }
+    console.log();
   };
 
   return (

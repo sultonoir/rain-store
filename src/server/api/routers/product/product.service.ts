@@ -4,19 +4,12 @@ import {
   type SlugProductSchema,
   type PostProductSchema,
   type SearchProductsParams,
-  type RecommendInput,
 } from "./product.input";
 import slugify from "slugify";
 import { TRPCError } from "@trpc/server";
-import { getTotalRating } from "@/lib/total-rating";
-import { createBlurHash } from "@/lib/blur";
 import { db } from "@/server/db";
 import { type Prisma } from "@prisma/client"; // Adjust the import as necessary
-import {
-  calculateTotalPrice,
-  generateRandomDecimal,
-  generateRandomSelling,
-} from "@/lib/utils";
+import { calculateTotalPrice } from "@/lib/utils";
 
 export const postProduct = async (
   ctx: TRPCContext,
@@ -119,104 +112,29 @@ export const getBySlug = async (
   ctx: TRPCContext,
   { slug }: SlugProductSchema,
 ) => {
-  const product = await ctx.db.product.findFirst({
+  const product = await db.product.findFirst({
     where: {
       slug,
     },
     include: {
-      productImage: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-      stockandsize: true,
       rating: true,
-
-      productDetails: {
-        include: {
-          category: true,
-        },
-      },
+      productImage: true,
+      stockandsize: true,
     },
   });
 
   if (!product) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Product not found",
-    });
+    return undefined;
   }
-
-  const coupon = await ctx.db.coupon.findMany({
-    where: {
-      OR: [
-        {
-          minOrder: 0,
-        },
-        {
-          minOrder: {
-            lte: product.price, // Menggunakan `lte` untuk mendapatkan kupon dengan minOrder <= product.price
-          },
-        },
-      ],
-    },
+  const rating = await db.rating.aggregate({
+    where: { product: { slug } },
+    _avg: { value: true },
   });
 
-  const newImages = await Promise.all(
-    product.productImage.map(async (img) => ({
-      ...img,
-      thumbnail: await createBlurHash(img.url),
-    })),
-  );
-
-  const newProduct = {
+  return {
     ...product,
-    productImage: newImages, // Sesuaikan dengan nama `productImage` dari database
-    coupon,
-    category: product.productDetails.at(0)?.category.name ?? "",
+    rating: rating._avg.value ?? 0,
   };
-
-  return newProduct;
-};
-
-export const listProduct = async (ctx: TRPCContext) => {
-  const products = await ctx.db.product.findMany({
-    include: {
-      productImage: {
-        take: 1,
-        orderBy: {
-          createdAt: "asc",
-        },
-      },
-
-      rating: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  const newProducts = await Promise.all(
-    products.map(async (item) => {
-      const totalRating = getTotalRating(item.rating);
-      const averageRating = totalRating / item.rating.length;
-
-      const newImages = await Promise.all(
-        item.productImage.flatMap(async (img) => ({
-          ...img,
-          thumbnail: await createBlurHash(img.url),
-        })),
-      );
-
-      return {
-        ...item,
-        rating: averageRating,
-        productImage: newImages,
-      };
-    }),
-  );
-
-  return newProducts;
 };
 
 export async function searchProducts({
@@ -235,14 +153,11 @@ export async function searchProducts({
     discount,
     rating,
     page,
-    take = 10,
+    take = 12,
     sort = "latest", // Default sorting
   } = input;
-  const pagecount = page ? parseInt(page) : 1;
-  const startIndex = (pagecount - 1) * take; // Mulai dari (currentPage - 1) * 10
-  const endIndex = startIndex + take;
   const conditions: Prisma.ProductWhereInput[] = [];
-
+  const skip = parseInt(page ?? "1");
   // Search by product name
   if (q) {
     conditions.push({ name: { contains: q, mode: "insensitive" } });
@@ -332,185 +247,97 @@ export async function searchProducts({
   };
 
   // Fetch products from the database
-  const products = await db.product.findMany({
-    where: whereClause,
-    orderBy: orderByClause,
-    include: {
-      rating: true,
-      productImage: {
-        take: 1,
-        orderBy: {
-          createdAt: "asc",
+  const [products, totalCount] = await Promise.all([
+    db.product.findMany({
+      where: whereClause,
+      orderBy: orderByClause,
+      include: {
+        rating: true,
+        productImage: {
+          take: 1,
+          orderBy: {
+            createdAt: "asc",
+          },
         },
       },
+      take,
+      skip,
+      cacheStrategy: { ttl: 60, swr: 60, tags: ["find-all"] },
+    }),
+    db.product.count({ where: whereClause }),
+  ]);
+
+  const ids = products.map((product) => product.id);
+
+  const ratings = await db.rating.groupBy({
+    by: ["productId"],
+    _avg: {
+      value: true,
     },
-    cacheStrategy: { ttl: 60, swr: 60 },
+    where: {
+      productId: {
+        in: ids,
+      },
+    },
+    cacheStrategy: {
+      ttl: 60,
+      swr: 60,
+      tags: ["rating-find"],
+    },
+  });
+
+  const sells = await db.selling.groupBy({
+    by: ["productId"],
+    _sum: {
+      amount: true,
+    },
+    where: {
+      productId: {
+        in: ids,
+      },
+    },
   });
 
   const newProducts = products.map((item) => {
+    const productRating =
+      ratings.find((rating) => rating.productId === item.id)?._avg.value ?? 0;
+
+    const mostSelling =
+      sells.find((sell) => sell.productId === item.id)?._sum.amount ?? 0;
     return {
       ...item,
-      rating: generateRandomDecimal(),
-      selling: generateRandomSelling(),
+      rating: productRating,
+      selling: mostSelling,
     };
   });
+
+  const pagination = {
+    total: totalCount,
+    pages: Math.ceil(totalCount / take),
+    current: page,
+    limit: take,
+  };
 
   if (sort === "most-rating") {
     return {
-      products: newProducts
-        .sort((a, b) => {
-          return b.rating - a.rating;
-        })
-        .slice(startIndex, endIndex),
-      count: newProducts.length,
+      products: newProducts.sort((a, b) => {
+        return b.rating - a.rating;
+      }),
+      pagination,
     };
   }
 
   if (sort === "hot-sale") {
     return {
-      products: newProducts
-        .sort((a, b) => {
-          return b.selling - a.selling;
-        })
-        .slice(startIndex, endIndex),
-      count: newProducts.length,
+      products: newProducts.sort((a, b) => {
+        return b.selling - a.selling;
+      }),
+      pagination,
     };
   }
 
-  return {
-    products: newProducts.slice(startIndex, endIndex),
-    count: newProducts.length,
-  };
-}
-
-export async function recommend({
-  input,
-}: {
-  ctx: TRPCContext;
-  input: RecommendInput;
-}) {
-  const { category, ids, slug, take, cursor } = input;
-  const conditions: Prisma.ProductWhereInput[] = [];
-
-  if (ids) {
-    conditions.push({ id: { in: ids } });
-  }
-
-  if (slug) {
-    conditions.push({ slug: { not: slug } });
-  }
-
-  if (category) {
-    conditions.push({
-      productDetails: {
-        some: {
-          category: { name: { contains: category, mode: "insensitive" } },
-        },
-      },
-    });
-  }
-
-  const whereClause: Prisma.ProductWhereInput = {
-    AND: conditions,
-  };
-
-  const products = await db.product.findMany({
-    where: whereClause,
-    include: {
-      rating: true,
-      productImage: {
-        take: 1,
-        orderBy: {
-          createdAt: "asc",
-        },
-      },
-    },
-    take: take ? take + 1 : undefined,
-    cursor: cursor ? { id: cursor } : undefined,
-    cacheStrategy: { ttl: 60, swr: 60 },
-  });
-
-  const nextCursor = products.length > take ? products[take]?.id : null;
-
-  const newProducts = await Promise.all(
-    products
-      .map(async (item) => {
-        const totalRating = getTotalRating(item.rating);
-        const averageRating = totalRating / item.rating.length;
-
-        const newImages = await Promise.all(
-          item.productImage.flatMap(async (img) => ({
-            ...img,
-            thumbnail: await createBlurHash(img.url),
-          })),
-        );
-
-        return {
-          ...item,
-          rating: averageRating,
-          productImage: newImages,
-        };
-      })
-      .slice(0, take),
-  );
   return {
     products: newProducts,
-    nextCursor,
-  };
-}
-
-export async function PageSection({
-  input,
-}: {
-  ctx: TRPCContext;
-  input: SearchProductsParams;
-}) {
-  const {
-    page,
-    take = 10,
-    sort = "latest", // Default sorting
-  } = input;
-  const pagecount = page ? parseInt(page) : 1;
-  const startIndex = (pagecount - 1) * take; // Mulai dari (currentPage - 1) * 10
-  const endIndex = startIndex + take;
-
-  const products = await db.product.findMany({
-    include: {
-      rating: true,
-      productImage: {
-        take: 1,
-        orderBy: {
-          createdAt: "asc",
-        },
-      },
-    },
-    cacheStrategy: { ttl: 60, swr: 60 },
-  });
-
-  const newProducts = products.map((item) => {
-    return {
-      ...item,
-      rating: generateRandomDecimal(),
-      selling: generateRandomSelling(),
-    };
-  });
-
-  if (sort === "hot-sale") {
-    return {
-      products: newProducts
-        .sort((a, b) => {
-          return b.selling - a.selling;
-        })
-        .slice(startIndex, endIndex),
-      count: newProducts.length,
-    };
-  }
-  return {
-    products: newProducts
-      .sort((a, b) => {
-        return b.rating - a.rating;
-      })
-      .slice(startIndex, endIndex),
-    count: newProducts.length,
+    pagination,
   };
 }

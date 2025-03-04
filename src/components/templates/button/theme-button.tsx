@@ -1,47 +1,54 @@
-// Dependencies: pnpm install lucide-react
-
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Moon, Sun } from "lucide-react";
+import * as React from "react";
+import { LaptopMinimal, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
 
 export function ThemeButton() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  const handleChange = (checked: boolean) => {
-    // Toggle theme between "dark" and "light"
-    setTheme(checked ? "dark" : "light");
-  };
+  const { setTheme, theme } = useTheme();
 
   return (
-    <div>
-      <div className="relative inline-grid h-9 grid-cols-[1fr_1fr] items-center text-sm font-medium">
-        <Switch
-          id="switch-12"
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuCheckboxItem
+          checked={theme === "light"}
+          onCheckedChange={() => setTheme("light")}
+          className="flex items-center gap-2"
+        >
+          <Sun className="size-4" />
+          Light
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
           checked={theme === "dark"}
-          onCheckedChange={handleChange}
-          className="peer absolute inset-0 h-[inherit] w-auto data-[state=checked]:bg-input/50 data-[state=unchecked]:bg-input/50 [&_span]:h-full [&_span]:w-1/2 [&_span]:transition-transform [&_span]:duration-300 [&_span]:[transition-timing-function:cubic-bezier(0.16,1,0.3,1)] data-[state=checked]:[&_span]:translate-x-full rtl:data-[state=checked]:[&_span]:-translate-x-full"
-        />
-        <span className="pointer-events-none relative ms-0.5 flex min-w-8 items-center justify-center text-center peer-data-[state=checked]:text-muted-foreground/70">
-          <Sun size={16} strokeWidth={2} aria-hidden="true" />
-        </span>
-        <span className="pointer-events-none relative me-0.5 flex min-w-8 items-center justify-center text-center peer-data-[state=unchecked]:text-muted-foreground/70">
-          <Moon size={16} strokeWidth={2} aria-hidden="true" />
-        </span>
-      </div>
-      <Label htmlFor="switch-12" className="sr-only">
-        Labeled switch
-      </Label>
-    </div>
+          onCheckedChange={() => setTheme("dark")}
+          className="flex items-center gap-2"
+        >
+          <Moon className="size-4" />
+          Dark
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={theme === "system"}
+          onCheckedChange={() => setTheme("system")}
+          className="flex items-center gap-2"
+        >
+          <LaptopMinimal className="size-4" />
+          System
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
