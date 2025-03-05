@@ -1,3 +1,4 @@
+import { Hero, Promotions } from "@/components/templates/home/home-hero";
 import EmailSubscription from "@/components/ui/email-subscription ";
 import Flow from "@/components/ui/flow";
 import HomeCategory from "@/components/ui/home-category";
@@ -14,11 +15,14 @@ export const metadata: Metadata = {
 const Page = async () => {
   const promo = await api.promo.get();
   return (
-    <main className="container relative z-0 min-h-screen py-5">
-      <Promo hero={promo} />
-      <section className="my-10 flex flex-col justify-items-center gap-10">
+    <main className="relative z-0 min-h-screen space-y-10 py-5">
+      <Hero />
+      <Promotions />
+      <div className="container">
         <HotSale sort="hot-sale" />
-
+      </div>
+      <Promo hero={promo} />
+      <section className="container my-10 flex flex-col justify-items-center gap-10">
         <Flow />
         <HomeCategory />
         <Suspense>
