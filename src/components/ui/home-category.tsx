@@ -1,109 +1,76 @@
 "use client";
-import { ArrowRight } from "lucide-react";
+
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const HomeCategory = () => {
   const lists = [
     {
       name: "Shoes",
-      path: "/search?subcategory=Shoes",
+      path: "/products/accessories/shoes",
       bgImage: "/explore1.svg",
-      image: "/full3.png",
+      image: "/2.jpg",
       totalProcuts: "155 products",
     },
     {
-      name: "Chlotes",
-      path: "/search?category=t-shirt",
+      name: "T-shirt",
+      path: "/products/t-shirt",
       bgImage: "/explore2.svg",
-      image: "/full1.png",
+      image: "/4.jpg",
       totalProcuts: "141 products",
     },
     {
-      name: "Hat",
-      path: "/search?subcategory=Hat",
+      name: "Outwear",
+      path: "/products/outwear",
       bgImage: "/explore3.svg",
-      image: "/16.png",
+      image: "/3.jpg",
       totalProcuts: "133 products",
     },
     {
       name: "Pants",
-      path: "/search?subcategory=Pants",
+      path: "/products/pants",
       bgImage: "/explore4.svg",
-      image: "/8.png",
+      image: "/5.jpg",
       totalProcuts: "142 products",
     },
     {
-      name: "Accessories",
-      path: "/search?subcategory=Accessories",
+      name: "Shirt",
+      path: "/products/shirt",
       bgImage: "/explore5.svg",
-      image: "/4.png",
+      image: "/1.jpg",
       totalProcuts: "144 products",
     },
     {
-      name: "Shoes",
-      path: "/search?subcategory=shoes",
+      name: "Bag",
+      path: "/products/accessories/bags",
       bgImage: "/explore6.svg",
-      image: "/full3.png",
+      image: "/6.jpg",
       totalProcuts: "149 products",
     },
   ];
   return (
-    <div className="relative py-24 lg:py-32">
-      <div className="absolute inset-y-0 left-1/2 z-0 w-screen -translate-x-1/2 transform bg-neutral-100/70 dark:bg-accent xl:max-w-[1340px] xl:rounded-[40px] 2xl:max-w-screen-2xl" />
-      <div className="nc-Section-Heading relative mb-12 flex flex-col justify-between text-neutral-900 dark:text-neutral-50 sm:flex-row sm:items-end lg:mb-14">
-        <div className="mx-auto flex w-full flex-col items-center text-center">
-          <h2 className="justify-center text-3xl font-semibold md:text-4xl 2xl:text-5xl">
-            Start exploring.
-          </h2>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-7 xl:grid-cols-3">
-        {lists.map((item) => (
-          <div
-            key={item.totalProcuts}
-            className="group relative w-full overflow-hidden rounded-3xl bg-white p-4 transition-shadow hover:shadow-lg dark:bg-neutral-900"
+    <div className="flex flex-col space-y-5">
+      <p className="font-bold ~text-2xl/3xl">
+        Mix & Match your preferred category!
+      </p>
+      <div className="grid grid-cols-3 gap-4 lg:grid-cols-6">
+        {lists.map((list) => (
+          <Link
+            href={list.path}
+            key={list.name}
+            className="flex flex-col gap-3"
           >
-            <div className="relative z-10 flex flex-col justify-between space-y-20">
-              <div className="flex items-center justify-between">
-                <div className="relative z-0 h-20 w-20 overflow-hidden rounded-full bg-indigo-50">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    sizes="100%"
-                    className="aspect-square object-cover"
-                  />
-                </div>
-                <span className="text-slate-700dark:text-neutral-300 text-xs font-medium">
-                  {item.totalProcuts}
-                </span>
-              </div>
-              <div className="mt-5">
-                <span className="mb-2 block text-sm text-slate-500 dark:text-slate-400">
-                  Manufacturar
-                </span>
-                <h2 className="text-2xl font-semibold sm:text-3xl">
-                  {item.name}
-                </h2>
-              </div>
-              <a
-                className="group-hover:text-primary-500 flex items-center text-sm font-medium transition-colors"
-                href={item.path}
-              >
-                <span>See Collection</span>
-                <ArrowRight />
-              </a>
-            </div>
             <Image
-              width={600}
-              height={600}
-              className="absolute bottom-0 right-0"
-              src={item.bgImage}
-              alt="1"
+              src={list.image}
+              alt={list.name}
+              width={150}
+              height={150}
+              priority
+              className="aspect-square size-full rounded-lg"
             />
-            <a href={item.path} className="absolute inset-0 z-10" aria-label={item.name} />
-          </div>
+            <p className="text-center">{list.name}</p>
+          </Link>
         ))}
       </div>
     </div>

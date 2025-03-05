@@ -1,4 +1,3 @@
-import LoadingProduct from "@/components/templates/product/loading-product";
 import EmailSubscription from "@/components/ui/email-subscription ";
 import Flow from "@/components/ui/flow";
 import HomeCategory from "@/components/ui/home-category";
@@ -17,10 +16,9 @@ const Page = async () => {
   return (
     <main className="container relative z-0 min-h-screen py-5">
       <Promo hero={promo} />
-      <section className="my-10 flex flex-col justify-items-center gap-5">
-        <Suspense fallback={<LoadingProduct />}>
-          <HotSale sort="hot-sale" />
-        </Suspense>
+      <section className="my-10 flex flex-col justify-items-center gap-10">
+        <HotSale sort="hot-sale" />
+
         <Flow />
         <HomeCategory />
         <Suspense>

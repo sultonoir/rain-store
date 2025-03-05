@@ -24,13 +24,13 @@ export default function Flow() {
               <Image
                 src={`${item.image}`}
                 alt="hiw1"
-                width={450}
-                height={450}
+                width={80}
+                height={80}
                 className="bg-blend-color-burn"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="124px"
               />
             </div>
-            <div className="mt-auto space-y-5 text-center">
+            <div className="space-y-5 text-center">
               <Badge variant={item.type}>{item.step}</Badge>
               <h3 className="text-base font-semibold">{item.title}</h3>
               <span className="block text-sm leading-6 text-slate-600 dark:text-slate-400">

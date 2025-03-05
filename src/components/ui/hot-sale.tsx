@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Carousel,
@@ -6,7 +7,8 @@ import {
   CarouselItem,
 } from "./carousel";
 import CardProduct from "../templates/product/card-product";
-import { api } from "@/trpc/server";
+import { api } from "@/trpc/react";
+import LoadingProduct from "../templates/product/loading-product";
 
 interface Props {
   sort?:
@@ -19,13 +21,22 @@ interface Props {
   title?: string;
 }
 
-export async function HotSale({
+export function HotSale({
   sort,
   title = "You May Like This Product 🥰",
 }: Props) {
-  const data = await api.product.search({
+  const { data, isLoading } = api.product.search.useQuery({
     sort,
   });
+
+  if (isLoading) {
+    return <LoadingProduct />;
+  }
+
+  if (!data) {
+    return null;
+  }
+
   return (
     <Carousel
       opts={{

@@ -11,8 +11,11 @@ import ButtonUP from "@/components/templates/button/button-up";
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Suspense>
-      <MainNavbar />
-      {children}
+      <div className="mb-8 lg:mb-0">
+        <MainNavbar />
+        {children}
+        <Footer />
+      </div>
       <DialogTermsCoupon />
       <SheetCoupon />
       <Toaster richColors position="top-center" />
@@ -20,7 +23,6 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
         <FilterMobile />
       </Suspense>
       <CartContent />
-      <Footer />
       <ButtonUP />
     </Suspense>
   );
