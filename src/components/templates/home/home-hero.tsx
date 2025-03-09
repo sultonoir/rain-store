@@ -4,7 +4,7 @@ import { ShoppingBag } from "lucide-react";
 
 export const Hero = () => {
   return (
-    <div className="overflow-hidden bg-gray-100">
+    <div className="overflow-hidden bg-gray-100 dark:bg-background">
       <div className="mx-auto flex min-h-[80vh] max-w-7xl flex-col px-4 md:flex-row">
         <div className="flex flex-1 flex-col items-center justify-center pt-10 md:items-start md:px-4 md:pt-0">
           <span
@@ -17,14 +17,14 @@ export const Hero = () => {
           <h2
             data-aos="fade-right"
             data-aos-delay="300"
-            className="mb-5 text-center text-[2.5rem] font-bold leading-tight text-black md:text-left md:text-5xl"
+            className="mb-5 text-center text-[2.5rem] font-bold leading-tight text-foreground md:text-left md:text-5xl"
           >
             An Industrial Take on Streetwear
           </h2>
           <h3
             data-aos="fade-right"
             data-aos-delay="400"
-            className="font-regular mb-5 text-center text-lg leading-tight text-neutral-700 md:mb-10 md:text-left"
+            className="font-regular mb-5 text-center text-lg leading-tight text-muted-foreground md:mb-10 md:text-left"
           >
             Anyone can beat you but no one can beat your outfit as long as you
             wear Dine outfits.

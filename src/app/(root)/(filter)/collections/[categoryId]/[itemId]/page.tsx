@@ -8,7 +8,7 @@ export async function generateMetadata({
   params,
 }: PageDynamic): Promise<Metadata> {
   const { itemId } = await params;
-  const title = itemId ?? ""
+  const title = decodeURIComponent(itemId ?? "");
   const titleCapital = capitalizeWords(title);
   return {
     title: titleCapital,
@@ -20,7 +20,7 @@ const Page = async (props: PageDynamic) => {
   const searchParams = await props.searchParams;
   const { categoryId, itemId } = params;
 
-  const title = categoryId ?? "";
+  const title = decodeURIComponent(itemId ?? "");
   return (
     <SearchProductPage
       params={{ categoryId, itemId }}

@@ -9,6 +9,8 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/server/db";
 import { type Prisma } from "@prisma/client"; // Adjust the import as necessary
 import { calculateTotalPrice } from "@/lib/utils";
+import { getRecommends } from "../recommend/recommend.service";
+import { type SearchProduct } from "@/types";
 
 export const postProduct = async (
   ctx: TRPCContext,
@@ -134,6 +136,30 @@ export const getBySlug = async (
 
 export async function searchProducts({
   input,
+  ctx,
+}: {
+  ctx: TRPCContext;
+  input: SearchProductsParams;
+}): Promise<SearchProduct> {
+  const { products, pagination } = await queryBuilder({ input, ctx });
+
+  if (products.length === 0) {
+    return {
+      products: undefined,
+      pagination,
+      recommend: await getRecommends({}),
+    };
+  }
+
+  return {
+    products,
+    pagination,
+    recommend: undefined,
+  };
+}
+
+export async function queryBuilder({
+  input,
 }: {
   ctx: TRPCContext;
   input: SearchProductsParams;
@@ -147,13 +173,13 @@ export async function searchProducts({
     max,
     discount,
     rating,
-    page,
     take = 12,
     sort = "latest", // Default sorting
   } = input;
   const conditions: Prisma.ProductWhereInput[] = [];
-  const skip = parseInt(page ?? "1");
-  // Search by product name
+  const page = parseInt(input.page ?? "1");
+  const skip = (page - 1) * take;
+
   if (q) {
     conditions.push({ name: { contains: q, mode: "insensitive" } });
   }
@@ -210,18 +236,6 @@ export async function searchProducts({
   if (discount) {
     conditions.push({
       discount: { gte: parseFloat(discount) },
-    });
-  }
-
-  if (rating) {
-    conditions.push({
-      rating: {
-        some: {
-          value: {
-            gte: parseFloat(rating),
-          },
-        },
-      },
     });
   }
 
@@ -328,6 +342,24 @@ export async function searchProducts({
       products: newProducts.sort((a, b) => {
         return b.selling - a.selling;
       }),
+      pagination,
+    };
+  }
+
+  if (rating) {
+    return {
+      products: newProducts
+        .filter((product) => product.rating >= parseInt(rating))
+        .sort((a, b) => {
+          return b.rating - a.rating;
+        }),
+      pagination,
+    };
+  }
+
+  if (products.length === 0) {
+    return {
+      products: [],
       pagination,
     };
   }

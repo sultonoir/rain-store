@@ -61,11 +61,11 @@ interface FilterCategoryProps {
 
 function FilterCategory({ onClose }: FilterCategoryProps) {
   return (
-    <div className="my-2 flex max-h-[calc(100dvh-500px)] flex-col space-y-2 overflow-auto p-4">
+    <div className="my-2 flex max-h-[calc(100dvh-200px)] flex-col space-y-2 overflow-auto p-4">
       {categories.map((item) => (
         <div key={item.id} className="flex w-full flex-col">
           <Link
-            href={`/p/${item.name}`}
+            href={`/collections/${item.name}`}
             className="inline-flex w-full rounded-lg px-3 py-1 text-sm font-semibold capitalize hover:bg-accent"
             onClick={onClose}
           >
@@ -73,7 +73,7 @@ function FilterCategory({ onClose }: FilterCategoryProps) {
           </Link>
           {item.subcategories.map((subitem) => (
             <Link
-              href={`/p/${item.name}/${subitem.name}`}
+              href={`/collections/${item.name}/${subitem.name}`}
               className="mx-3.5 rounded-lg px-2.5 py-1 text-sm capitalize leading-normal hover:bg-accent"
               onClick={onClose}
               key={subitem.id}

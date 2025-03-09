@@ -20,8 +20,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-export interface PaginationWithLinksProps
-  extends React.HTMLAttributes<HTMLElement> {
+export interface PaginationWithLinksProps {
   pageSizeSelectOptions?: {
     pageSizeSearchParam?: string;
     pageSizeOptions: number[];
@@ -50,7 +49,6 @@ export function PaginationWithLinks({
   totalCount,
   page,
   pageSearchParam,
-  className,
 }: PaginationWithLinksProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -72,7 +70,7 @@ export function PaginationWithLinks({
   const navToPageSize = useCallback(
     (newPageSize: number) => {
       const key = pageSizeSelectOptions?.pageSizeSearchParam ?? "pageSize";
-      const newSearchParams = new URLSearchParams(searchParams ?? undefined);
+      const newSearchParams = new URLSearchParams(searchParams || undefined);
       newSearchParams.set(key, String(newPageSize));
       newSearchParams.delete(pageSearchParam ?? "page"); // Clear the page number when changing page size
       router.push(`${pathname}?${newSearchParams.toString()}`);
@@ -154,11 +152,7 @@ export function PaginationWithLinks({
   };
 
   return (
-    <div
-      className={cn(
-        "flex w-full flex-col items-center justify-end gap-3 md:flex-row",
-      )}
-    >
+    <div className="flex w-full flex-col items-center gap-3 md:flex-row">
       {pageSizeSelectOptions && (
         <div className="flex flex-1 flex-col gap-4">
           <SelectRowsPerPage
@@ -168,11 +162,7 @@ export function PaginationWithLinks({
           />
         </div>
       )}
-      <Pagination
-        className={cn(className, {
-          "md:justify-end": pageSizeSelectOptions,
-        })}
-      >
+      <Pagination className={cn({ "md:justify-end": pageSizeSelectOptions })}>
         <PaginationContent className="max-sm:gap-0">
           <PaginationItem>
             <PaginationPrevious
@@ -234,33 +224,5 @@ function SelectRowsPerPage({
         </SelectContent>
       </Select>
     </div>
-  );
-}
-
-const defaultProps: PaginationWithLinksProps = {
-  page: 1,
-  totalCount: 500,
-  pageSize: 20,
-};
-
-export default function Item({
-  ...rest
-}: Partial<PaginationWithLinksProps> & { title?: string }) {
-  const searchParams = useSearchParams();
-  const page = rest.page ?? Number.parseInt(searchParams?.get("page") ?? "1");
-  const pageSize =
-    rest.pageSize ??
-    Number.parseInt(
-      searchParams?.get(
-        rest.pageSizeSelectOptions?.pageSizeSearchParam ?? "pageSize",
-      ) ?? "10",
-    );
-  return (
-    <PaginationWithLinks
-      {...defaultProps}
-      page={page}
-      pageSize={pageSize}
-      {...rest}
-    />
   );
 }

@@ -134,3 +134,20 @@ export type PageDynamic = {
   searchParams: SearchParams;
   params: Params;
 };
+
+export type Products = Product & {
+  productImage: ProductImage[];
+};
+
+export type Pagination = {
+  total: number;
+  pages: number;
+  current: number;
+  limit: number;
+};
+
+export type SearchProduct = {
+  products?: ProductCard[];
+  pagination: Pagination;
+  recommend?: ProductCard[];
+};
