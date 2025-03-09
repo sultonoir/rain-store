@@ -1,120 +1,85 @@
 "use client";
-
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
 import { categories } from "@/lib/constants";
-import { ChevronRight } from "lucide-react";
-import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { Section } from "@/components/ui/section";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LoadingButton } from "../button/loading-button";
 
-export default function FilterCategory() {
-  const searchParams = useSearchParams();
+export const FilterCategory = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const category = searchParams?.get("category");
-  const subcategory = searchParams?.get("subcategory");
-  const [openCategory, setOpenCategory] = useState(category);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>(
-    [],
+  const { itemId } = useParams();
+  const [openCategoryId, setOpenCategoryId] = React.useState<string | null>(
+    null,
   );
 
-  useEffect(() => {
-    // Initialize selected subcategories based on the query parameter
-    if (subcategory) {
-      setSelectedSubcategories([subcategory]);
-    } else {
-      setSelectedSubcategories([]);
-    }
-  }, [subcategory]);
-
-  useEffect(() => {
-    setOpenCategory(category);
-  }, [category]);
-
-  const addParams = (key: string) => {
-    const current = new URLSearchParams(
-      Array.from(searchParams?.entries() ?? []),
-    );
-
-    if (selectedSubcategories.includes(key)) {
-      // Remove subcategory if it already exists
-      selectedSubcategories.splice(selectedSubcategories.indexOf(key), 1);
-      current.delete("subcategory");
-    } else {
-      // Add subcategory if it doesn't exist
-      selectedSubcategories.push(key);
-      current.set("subcategory", key);
-    }
-
-    const queryString = current.toString();
-    const path = queryString ? pathname + "?" + queryString : (pathname ?? "");
-    router.push(path);
-    setSelectedSubcategories([...selectedSubcategories]); // Update state
+  const toggleCategory = (categoryId: string | null) => {
+    setOpenCategoryId((prev) => (prev === categoryId ? null : categoryId));
   };
-
-  const handleOpenChange = (itemName: string) => {
-    setOpenCategory((prev) => (prev === itemName ? null : itemName));
-  };
-
-  if (pathname !== "/search") return null;
 
   return (
-    <section className="space-y-2 rounded-b-2xl border-b p-4 shadow-lg dark:shadow-accent/50">
+    <Section>
       <p className="text-sm font-bold">Categories</p>
-      <div className="flex flex-col space-y-2 divide-y">
+      <div className="flex flex-col divide-y">
         {categories.map((item) => (
           <Collapsible
             key={item.id}
-            open={item.name === openCategory}
-            onOpenChange={() => handleOpenChange(item.name)}
+            open={openCategoryId === item.id}
+            onOpenChange={(open) => toggleCategory(open ? item.id : null)}
             className="group/collapsible"
-            asChild
           >
-            <div>
+            <div className="my-2 flex items-center justify-between">
+              <Link
+                prefetch
+                href={`/collections/${item.name}`}
+                className="capitalize"
+              >
+                {item.name}
+              </Link>
               <CollapsibleTrigger asChild>
-                <LoadingButton
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2 w-full justify-between capitalize"
-                >
-                  <span>{item.name}</span>
+                <Button variant="ghost" size="sm">
                   <ChevronRight className="ml-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </LoadingButton>
+                  <span className="sr-only">Toggle</span>
+                </Button>
               </CollapsibleTrigger>
-              <CollapsibleContent className="my-2">
-                <div className="flex min-w-0 translate-x-px flex-col gap-1 px-2.5 py-0.5">
-                  {item.subcategories.map((subItem) => (
-                    <div
-                      className="flex items-center justify-between"
-                      key={subItem.id}
-                    >
-                      <Label
-                        htmlFor={subItem.id}
-                        className="w-full text-sm font-normal capitalize"
-                      >
-                        {subItem.name}
-                      </Label>
-                      <Checkbox
-                        id={subItem.id}
-                        className="size-5"
-                        checked={selectedSubcategories.includes(subItem.name)}
-                        onCheckedChange={() => addParams(subItem.name)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </CollapsibleContent>
             </div>
+            <CollapsibleContent className="my-2">
+              <div className="flex min-w-0 translate-x-px flex-col gap-1 px-2.5 py-0.5">
+                {item.subcategories.map((subItem) => (
+                  <div
+                    className="flex items-center justify-between"
+                    key={subItem.id}
+                  >
+                    <Link
+                      prefetch
+                      href={`/collections/${item.name}/${subItem.name}`}
+                      className="w-full text-sm font-normal capitalize"
+                    >
+                      {subItem.name}
+                    </Link>
+                    <Checkbox
+                      className="size-5"
+                      checked={
+                        decodeURIComponent(itemId as string) === subItem.name
+                      }
+                      onCheckedChange={() =>
+                        router.push(`/collections/${item.name}/${subItem.name}`)
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            </CollapsibleContent>
           </Collapsible>
         ))}
       </div>
-    </section>
+    </Section>
   );
-}
+};

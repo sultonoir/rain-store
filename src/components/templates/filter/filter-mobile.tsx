@@ -8,14 +8,15 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Star } from "lucide-react";
 import { FilterPrice } from "./filter-price";
 import useFilter from "@/hooks/use-filter";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Section } from "@/components/ui/section";
 import React from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { SelectRating } from "../rating/select-rating";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export function FilterMobile() {
   const pathname = usePathname();
@@ -25,10 +26,18 @@ export function FilterMobile() {
 
   const handleSubmit = () => {
     const queryParams = new URLSearchParams(searchParams?.toString());
-    queryParams.set("min", String(filter.min));
-    queryParams.set("max", String(filter.max));
-    queryParams.set("discount", String(filter.discount));
-    queryParams.set("rating", String(filter.rating));
+    if (filter.min > 0) {
+      queryParams.set("min", String(filter.min));
+    }
+    if (filter.max > 0) {
+      queryParams.set("max", String(filter.max));
+    }
+    if (filter.discount > 0) {
+      queryParams.set("discount", String(filter.discount));
+    }
+    if (filter.rating) {
+      queryParams.set("rating", String(filter.rating));
+    }
     const path = `${pathname}?${queryParams.toString()}`;
     setFilterOpen();
     router.replace(path);
@@ -145,26 +154,32 @@ function FilterDiscount() {
 }
 
 function FilterRating() {
-  const ratingOptions = [
-    { stars: 5, count: 5168 },
-    { stars: 4, count: 4726 },
-    { stars: 3, count: 3234 },
-    { stars: 2, count: 1842 },
-    { stars: 1, count: 452 },
-  ];
   const { filter, setFilterValue } = useFilter();
 
   const handleRating = (value: string) => {
+    if (filter.rating) {
+      setFilterValue({ rating: undefined });
+    }
     setFilterValue({ rating: Number(value) });
   };
   return (
     <Section>
-      <p>Rating</p>
-      <SelectRating
-        options={ratingOptions}
-        value={String(filter.rating)}
-        handleRating={handleRating}
-      />
+      <p className="text-sm font-bold">Rating</p>
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id="rating-mobile"
+          checked={filter.rating === 4}
+          onCheckedChange={() => handleRating("4")}
+          className="size-5"
+        />
+        <Label
+          htmlFor="rating-mobile"
+          className="inline-flex items-center gap-1"
+        >
+          <Star className="size-4 fill-yellow-400 text-yellow-400" />
+          rating of more than 4
+        </Label>
+      </div>
     </Section>
   );
 }

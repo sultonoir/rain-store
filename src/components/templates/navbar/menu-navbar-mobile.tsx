@@ -74,11 +74,16 @@ function FilterCategory({ onClose }: FilterCategoryProps) {
           {item.subcategories.map((subitem) => (
             <Link
               href={`/collections/${item.name}/${subitem.name}`}
-              className="mx-3.5 rounded-lg px-2.5 py-1 text-sm capitalize leading-normal hover:bg-accent"
-              onClick={onClose}
+              className="mx-4 inline-flex w-full border-l"
               key={subitem.id}
             >
-              {subitem.name}
+              <span
+                className="mx-2 w-full max-w-full rounded-lg px-2.5 py-1 text-sm capitalize leading-normal hover:bg-accent"
+                onClick={onClose}
+                key={subitem.id}
+              >
+                {subitem.name}
+              </span>
             </Link>
           ))}
         </div>

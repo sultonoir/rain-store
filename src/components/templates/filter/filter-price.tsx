@@ -2,7 +2,6 @@
 
 import { Section } from "@/components/ui/section";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { PriceInput } from "../input/price-input";
 import useFilter from "@/hooks/use-filter";
 
@@ -13,23 +12,13 @@ export function FilterPrice() {
 
   const { filter, setFilterValue } = useFilter();
 
-  // State error
-  const [err, setErr] = useState("");
-
   // Handle change for max price
   const handleMaxChange = (value: number) => {
-    console.log("Max changed:", value);
     setFilterValue({ max: value });
-    if (value <= filter.min) {
-      setErr("Max value must not be less than or equal to Min value");
-    } else {
-      setErr(""); // Clear error if max is valid
-    }
   };
 
   // Handle change for min price
   const handleMinChange = (value: number) => {
-    console.log("Min changed:", value);
     setFilterValue({ min: value });
   };
 
@@ -74,7 +63,6 @@ export function FilterPrice() {
         {/* Optional: Add a submit button */}
         <button type="submit" className="sr-only hidden" />
       </form>
-      {err && <p className="text-xs text-red-600">{err}</p>}
     </Section>
   );
 }

@@ -217,12 +217,12 @@ export async function queryBuilder({
   const priceConditions: Prisma.ProductWhereInput[] = [];
   if (min) {
     priceConditions.push({
-      price: { gte: parseFloat(min) },
+      priceAfterDiscount: { gte: parseFloat(min) },
     });
   }
   if (max) {
     priceConditions.push({
-      price: { lte: parseFloat(max) },
+      priceAfterDiscount: { lte: parseFloat(max) },
     });
   }
 

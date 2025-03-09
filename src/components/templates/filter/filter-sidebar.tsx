@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 import FilterInstalled from "./filter-installed";
-import FilterCategory from "./filter-category";
+import { FilterCategory } from "./filter-category";
 import { FilterPrice } from "./filter-price";
 import { FilterDiscount } from "./filter-discount";
 import { FilterRating } from "./filter-rating";
