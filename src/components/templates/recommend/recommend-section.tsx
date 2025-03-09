@@ -5,35 +5,26 @@ import {
   CarouselContent,
   CarouselHeader,
   CarouselItem,
-} from "./carousel";
-import CardProduct from "../templates/product/card-product";
+} from "@/components/ui/carousel";
+import CardProduct from "@/components/templates/product/card-product";
+import LoadingProduct from "@/components/templates/product/loading-product";
 import { api } from "@/trpc/react";
-import LoadingProduct from "../templates/product/loading-product";
 
 interface Props {
-  sort?:
-    | "hot-sale"
-    | "most-rating"
-    | "latest"
-    | "lowest-price"
-    | "high-price"
-    | undefined;
+  slug: string;
   title?: string;
 }
 
-export function HotSale({
-  sort,
-  title = "You May Like This Product 🥰",
-}: Props) {
-  const { data, isLoading } = api.product.search.useQuery({
-    sort,
+export function RecommendSection({ slug, title = "Recommendations" }: Props) {
+  const { data, isLoading } = api.recommends.getRecommends.useQuery({
+    slug,
   });
 
   if (isLoading) {
     return <LoadingProduct />;
   }
 
-  if (!data?.products) {
+  if (!data) {
     return null;
   }
 
@@ -45,7 +36,7 @@ export function HotSale({
     >
       <CarouselHeader title={title} />
       <CarouselContent>
-        {data.products.map((item) => (
+        {data.map((item) => (
           <CarouselItem
             key={item.id}
             className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"

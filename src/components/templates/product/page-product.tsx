@@ -16,26 +16,24 @@ interface Props {
 
 const PageProduct = ({ data }: Props) => {
   return (
-    <div className="container relative z-0 my-10 min-h-screen space-y-4">
-      <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
-        <div className="relative lg:w-[55%]">
-          <ImagesProduct images={data.productImage} />
-        </div>
-        <div className="space-y-4 lg:w-[45%]">
-          <TitleProduct title={data.name} />
-          <TotalRating rating={0} size={20} />
-          <PriceProduct
-            discount={data.discount}
-            price={data.price}
-            priceClassName="~text-lg/4xl"
-            discountClassName="~text-sm/2xl"
-          />
-          <SizesProduct sizes={data.stockandsize} />
-          <QtyProduct />
-          <PaymentProduct data={data} />
-          <AboutProduct about={data.desc} />
-          <BenefitProduct />
-        </div>
+    <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
+      <div className="relative lg:w-[55%]">
+        <ImagesProduct images={data.productImage} />
+      </div>
+      <div className="space-y-4 lg:w-[45%]">
+        <TitleProduct title={data.name} />
+        <TotalRating rating={0} size={20} />
+        <PriceProduct
+          discount={data.discount}
+          price={data.price}
+          priceClassName="~text-lg/4xl"
+          discountClassName="~text-sm/2xl"
+        />
+        <SizesProduct sizes={data.stockandsize} />
+        <QtyProduct />
+        <PaymentProduct data={data} />
+        <AboutProduct about={data.desc} />
+        <BenefitProduct />
       </div>
     </div>
   );

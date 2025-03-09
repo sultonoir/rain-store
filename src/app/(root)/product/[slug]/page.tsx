@@ -1,9 +1,11 @@
-import { api } from "@/trpc/server";
+import { api, HydrateClient } from "@/trpc/server";
 import { type Metadata } from "next";
 import React from "react";
 import { notFound } from "next/navigation";
 
 import PageProduct from "@/components/templates/product/page-product";
+import { ReviewerSection } from "@/components/templates/review/reviewer-section";
+import { RecommendSection } from "@/components/templates/recommend/recommend-section";
 
 type Params = Promise<{ slug: string }>;
 
@@ -78,13 +80,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const Page = async ({ params }: Props) => {
   const { slug } = await params;
-  const data = await api.product.slug({
+  const products = await api.product.slug({
     slug,
   });
 
-  if (!data) notFound();
+  if (!products) notFound();
 
-  return <PageProduct data={data} />;
+  const initialData = await api.reviews.getBySlug({
+    slug,
+  });
+  return (
+    <div className="container relative z-0 my-10 min-h-screen space-y-4">
+      <PageProduct data={products} />
+      <HydrateClient>
+        <ReviewerSection slug={slug} initialData={initialData} />
+      </HydrateClient>
+      <RecommendSection slug={slug} />
+    </div>
+  );
 };
 
 export default Page;

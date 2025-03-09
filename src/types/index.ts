@@ -2,6 +2,7 @@ import {
   type StockAndSize,
   type Product,
   type ProductImage,
+  type Rating,
 } from "@prisma/client";
 import { type LucideProps } from "lucide-react";
 import { type Socket, type Server as NetServer } from "net";
@@ -150,4 +151,28 @@ export type SearchProduct = {
   products?: ProductCard[];
   pagination: Pagination;
   recommend?: ProductCard[];
+};
+
+export type RatingStats = {
+  averageRating: number;
+  ratingCounts: {
+    stars: number;
+    count: number;
+    percentage: number;
+  }[];
+  totalReviews: number;
+};
+
+export type RatingWithuser = Rating & {
+  user: {
+    name: string | null;
+    image: string | null;
+  };
+};
+
+export type ReviewerProps = {
+  ratings: RatingWithuser[];
+  pagination: Pagination;
+  stats: RatingStats;
+  page?: string;
 };

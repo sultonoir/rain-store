@@ -37,7 +37,7 @@ export default function RecomendPagination({
     case "success":
       return (
         <React.Fragment>
-          {data.products.length < 1 ? null : (
+          {data.products && data.products?.length < 1 ? null : (
             <div className="flex flex-col gap-2">
               {title && <h3 className="font-bold ~text-lg/2xl">{title}</h3>}
               <div
@@ -46,7 +46,7 @@ export default function RecomendPagination({
                   layoutClassName,
                 )}
               >
-                {data.products.map((product) => (
+                {data.products?.map((product) => (
                   <CardProduct key={product.id} product={product} />
                 ))}
               </div>

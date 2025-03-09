@@ -8,6 +8,8 @@ import { sizeProcedure } from "./routers/size/size.procedure";
 import { notifiProcedure } from "./routers/notifi/notifi.procedure";
 import { paymentProcedure } from "./routers/payment/payment.procedure";
 import { promoProcedure } from "./routers/promo/promo.procedure";
+import { reviewsProcedure } from "./routers/reviews/reviews.procedure";
+import { recommendProcedure } from "./routers/recommend/recommend.procedure";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +26,8 @@ export const appRouter = createTRPCRouter({
   notifi: notifiProcedure,
   payment: paymentProcedure,
   promo: promoProcedure,
+  reviews: reviewsProcedure,
+  recommends: recommendProcedure,
 });
 
 // export type definition of API
