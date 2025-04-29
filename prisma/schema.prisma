@@ -2,19 +2,429 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@index([name])
+  @@index([name])
+}
+
+model User {
+  id            String          @id @default(nanoid(10))
+  email         String          @unique
+  name          String          @default("")
+  emailVerified Boolean
+  image         String          @default("https://res.cloudinary.com/dv6cln4gs/image/upload/v1745806830/k97ej5xme96j913p5ntbex30y97e1hfq/u9mvefelkhohmaufuw8x.png")
+  imageBlur     String          @default("U8R3TWt7~qxu%MfQayj[?bj[D*ayoffQWBay")
+  imageId       String          @default("")
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+  sessions      Session[]
+  accounts      Account[]
+  notifi        Notifi[]
+  notifiRead    NotifiRead[]
+  couponConsume CouponConsume[]
+  rating        Rating[]
+  order         Order[]
+  complain      Complain[]
+  buyer         Buyer?
+
+  @@map("user")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Product {
+  id               String            @id @unique @default(nanoid(10))
+  name             String
+  summary          String            @db.Text
+  slug             String            @unique
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  desc             String            @db.Text
+  normalPrice      Float
+  discount         Float
+  discountPrice    Float             @default(0)
+  ratingAverage    Float             @default(0)
+  ratingCount      Float             @default(0)
+  selling          Int               @default(0)
+  category         String
+  subcategory      String
+  media            Media[]
+  variant          Variant[]
+  productDetails   ProductDetails[]
+  orderItem        OrderItem[]
+  rating           Rating[]
+  complain         Complain[]
+  promo            PromoAndProduct[]
+  Sale             Sale[]
+  ratingStatistics RatingStatistics?
+
+  @@index([name], type: Hash)
+  @@index([discountPrice], type: BTree)
+  @@index([category], type: Hash)
+  @@index([subcategory], type: Hash)
+  @@index([ratingAverage])
+  @@index([selling])
+  @@index([ratingCount])
+  @@index([slug], type: Hash)
+  @@index([discount], type: BTree)
+}
+
+model Media {
+  id        String   @id @unique @default(nanoid(10))
+  url       String   @db.Text
+  thumbnail String   @db.Text
+  blur      String   @default("")
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId], type: Hash)
+  @@index([url], type: BTree)
+}
+
+model Variant {
+  id        String   @id @unique @default(nanoid(10))
+  name      String
+  amount    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan ukuran
+  @@index([productId], type: Hash)
+}
+
+model Category {
+  id             String           @id @unique @default(nanoid(10))
+  name           String           @unique
+  slug           String           @default("")
+  desc           String           @default("")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  subcategories  Subcategory[]
+  productDetails ProductDetails[]
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama kategori
+}
+
+model Subcategory {
+  id             String           @id @unique @default(nanoid(10))
+  name           String           @unique
+  categoryId     String
+  slug           String           @default("")
+  desc           String           @default("")
+  category       Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  productDetails ProductDetails[]
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama subkategori
+  @@index([categoryId], type: Hash)
+}
+
+model ProductDetails {
+  productId     String
+  categoryId    String
+  subcategoryId String
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, subcategoryId, categoryId])
+  @@index([categoryId], type: Hash) // Indeks untuk pencarian berdasarkan kategori
+  @@index([subcategoryId], type: Hash) // Indeks untuk pencarian berdasarkan subkategori
+}
+
+model Revenue {
+  id          String   @id @default(cuid())
+  period      String
+  totalAmount Float
+  startDate   DateTime
+  endDate     DateTime
+  updatedAt   DateTime @updatedAt
+
+  @@unique([period, startDate, endDate])
+  @@index([period])
+}
+
+model Buyer {
+  id             String    @id @default(nanoid(10))
+  userId         String    @unique
+  totalOrders    Int       @default(0)
+  totalItems     Int       @default(0)
+  totalSpend     Int       @default(0)
+  averageSpend   Float     @default(0)
+  lastOrderDate  DateTime?
+  firstOrderDate DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relasi opsional
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Sale {
+  id          String     @id @default(nanoid(10))
+  productId   String
+  quantity    Int        @default(0)
+  status      SaleStatus
+  totalAmount Float
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, status])
+  @@index([productId, status])
+}
+
+enum SaleStatus {
+  SOLD
+  CANCELLED
+  REFUNDED
+}
+
+model Rating {
+  id        String   @id @unique @default(nanoid(10))
+  value     Float
+  message   String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([id], type: Hash)
+  @@index([productId], type: Hash)
+}
+
+model RatingStatistics {
+  id          String   @id @unique @default(nanoid(10))
+  ratingValue Int      @unique
+  ratingCount Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  productId   String   @unique
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([ratingValue])
+}
+
+enum OrderStatus {
+  pending
+  paid
+  cancel
+  success
+  shipped
+}
+
+model Order {
+  id            String      @id @unique @default(nanoid(10))
+  totalAmount   Float // Total uang yang dibayar
+  status        OrderStatus @default(pending)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalQuantity Int // Jumlah total barang yang dibeli
+  Notifi        Notifi[]
+  Complain      Complain[]
+  checkoutItem  OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([id], type: Hash)
+  @@index([userId], type: Hash)
+}
+
+model OrderItem {
+  id        String   @id @unique @default(nanoid(10))
+  quantity  Int
+  price     Float
+  size      String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId], type: Hash)
+  @@index([productId], type: Hash)
+  @@index([id], type: Hash)
+}
+
+enum NotificationStatus {
+  PaymentUpdate // Pembaruan atau notifikasi terkait pembayaran
+  Promo // Promosi atau penawaran
+  OrderPending // Pesanan sedang menunggu proses atau konfirmasi
+  OrderShipped // Barang sudah dikirim atau pembaruan penerima
+  Rating // Notifikasi untuk rating produk atau layanan
+  ComplaintFiled // Keluhan telah diajukan atau pembaruan keluhan
+  OrderCanceled // Pesanan dibatalkan
+}
+
+model Notifi {
+  id         String             @id @unique @default(nanoid(10))
+  status     NotificationStatus @default(OrderPending)
+  createdAt  DateTime           @default(now())
+  message    String
+  orderId    String?
+  order      Order?             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifiRead NotifiRead[]
+
+  @@index([userId], type: Hash)
+  @@index([id], type: Hash)
+}
+
+model NotifiRead {
+  id        String   @id @default(nanoid(10))
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isRead    Boolean  @default(false)
+  notifiId  String
+  notifi    Notifi   @relation(fields: [notifiId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], type: Hash)
+  @@index([id], type: Hash)
+  @@index([notifiId], type: Hash)
+}
+
+model Complain {
+  id        String   @id @unique @default(nanoid(10))
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], type: Hash)
+  @@index([id], type: Hash)
+  @@index([productId], type: Hash)
+  @@index([orderId], type: Hash)
+}
+
+model Promo {
+  id        String            @id @unique @default(nanoid(10))
+  title     String
+  image     String
+  slug      String
+  desc      String
+  discount  Int
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  product   PromoAndProduct[]
+}
+
+model PromoAndProduct {
+  promoId   String
+  promo     Promo   @relation(fields: [promoId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, promoId])
+}
+
+model Coupon {
+  id            String          @id @unique @default(nanoid(10))
+  code          String
+  title         String
+  amount        Int?
+  minOrder      Int             @default(0)
+  desc          String
+  tac           String
+  expiresAt     DateTime
+  discount      Float           @default(0.1)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  couponConsume CouponConsume[]
+}
+
+model CouponConsume {
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([couponId, userId])
+  @@index([couponId], type: Hash)
+  @@index([userId], type: Hash)
+}
+
+model FlashSale {
+  id        String   @id @default(cuid())
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
 }
