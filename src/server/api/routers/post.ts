@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient();
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -14,10 +17,15 @@ export const postRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.post.create({
+      const post = await ctx.db.post.create({
         data: {
           name: input.name,
         },
+      });
+      await supabase.channel("posts").send({
+        type: "broadcast",
+        event: "message",
+        payload: post,
       });
     }),
 
@@ -28,4 +36,41 @@ export const postRouter = createTRPCRouter({
 
     return post ?? null;
   }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => ctx.db.post.findMany()),
+
+  remove: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      await supabase.channel("posts").send({
+        type: "broadcast",
+        event: "remove",
+        payload: post,
+      });
+    }),
+
+  edit: publicProcedure
+    .input(z.object({ id: z.number(), name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+        },
+      });
+
+      await supabase.channel("posts").send({
+        type: "broadcast",
+        event: "edit",
+        payload: post,
+      });
+    }),
 });

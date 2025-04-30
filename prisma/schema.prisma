@@ -94,19 +94,19 @@ model Verification {
 }
 
 model Product {
-  id               String            @id @unique @default(nanoid(10))
+  id               String             @id @unique @default(nanoid(10))
   name             String
-  summary          String            @db.Text
-  slug             String            @unique
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  desc             String            @db.Text
+  summary          String             @db.Text
+  slug             String             @unique
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  desc             String             @db.Text
   normalPrice      Float
-  discount         Float
-  discountPrice    Float             @default(0)
-  ratingAverage    Float             @default(0)
-  ratingCount      Float             @default(0)
-  selling          Int               @default(0)
+  discount         Float              @default(0)
+  discountPrice    Float              @default(0)
+  ratingAverage    Float              @default(0)
+  ratingCount      Float              @default(0)
+  selling          Int                @default(0)
   category         String
   subcategory      String
   media            Media[]
@@ -117,7 +117,7 @@ model Product {
   complain         Complain[]
   promo            PromoAndProduct[]
   Sale             Sale[]
-  ratingStatistics RatingStatistics?
+  ratingStatistics RatingStatistics[]
 
   @@index([name], type: Hash)
   @@index([discountPrice], type: BTree)
@@ -263,14 +263,16 @@ model Rating {
 
 model RatingStatistics {
   id          String   @id @unique @default(nanoid(10))
-  ratingValue Int      @unique
+  ratingValue Int
   ratingCount Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  productId   String   @unique
+  productId   String
   product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
+  @@unique([ratingValue, productId])
   @@index([ratingValue])
+  @@index([productId])
 }
 
 enum OrderStatus {
