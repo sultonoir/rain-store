@@ -24,22 +24,14 @@ export async function getProducts({
   // Filter by category
   if (category) {
     conditions.push({
-      productDetails: {
-        some: {
-          category: { name: category },
-        },
-      },
+      category,
     });
   }
 
   // Filter by subcategory
   if (subcategory) {
     conditions.push({
-      productDetails: {
-        some: {
-          subcategory: { name: subcategory },
-        },
-      },
+      subcategory,
     });
   }
 
@@ -116,4 +108,17 @@ export async function getProducts({
     ...product,
     media: product.media[0]!,
   }));
+}
+
+export async function getProductByslug(slug: string) {
+  return await db.product.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      media: true,
+      variant: true,
+      ratingStatistics: true,
+    },
+  });
 }

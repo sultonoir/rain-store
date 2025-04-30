@@ -11,7 +11,7 @@ const Page = () => {
     <main className="container mx-auto min-h-screen space-y-10 py-5">
       <HomePromotion />
       <Suspense fallback={<ProductLoading />}>
-        <ProductCarousel sort="latest" />
+        <ProductCarousel sort="most-rated" />
       </Suspense>
       <HomeFeatures />
       <HomeCategory />

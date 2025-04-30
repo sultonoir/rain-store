@@ -26,7 +26,7 @@ const ProductCard = ({ product }: Props) => {
       <CardContent className="space-y-1 p-2">
         <CardTitle className="w-[calc(100%-1px)] truncate text-base font-normal">
           <Link
-            href={`/product/${product.slug}`}
+            href={`/products/${product.category}/${product.subcategory}/${product.slug}`}
             prefetch={true}
             title={product.name}
           >
@@ -35,10 +35,8 @@ const ProductCard = ({ product }: Props) => {
           </Link>
         </CardTitle>
         <ProductRating
-          rating={{
-            average: product.ratingAverage,
-            count: product.ratingCount,
-          }}
+          average={product.ratingAverage}
+          count={product.ratingCount}
         />
         <ProductPrice
           discount={product.discount}
