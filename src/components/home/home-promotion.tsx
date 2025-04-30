@@ -28,7 +28,7 @@ const HomePromotions = () => {
 
           <div className="flex flex-col gap-4 sm:flex-row">
             <Link
-              href="/collections"
+              href="/products"
               prefetch={true}
               className="bg-primary text-primary-foreground hover:bg-primary/80 rounded-full px-8 py-4 transition duration-300"
             >

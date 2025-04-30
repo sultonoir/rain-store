@@ -77,7 +77,7 @@ const HomeCategory = () => {
         Mix & Match your preferred category!
       </p>
       <ul
-        className="mx-auto grid w-full max-w-xl grid-cols-2 items-center justify-center gap-y-1 text-[0.9rem] font-medium text-gray-900 sm:w-[initial] sm:flex-nowrap sm:gap-4 md:grid-cols-3 lg:max-w-full lg:grid-cols-6"
+        className="grid grid-cols-3 lg:grid-cols-6"
         onMouseLeave={() => setHovered(null)}
       >
         {lists.map((list, index) => (

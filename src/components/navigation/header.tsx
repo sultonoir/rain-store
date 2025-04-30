@@ -3,6 +3,7 @@ import Logo from "./logo";
 import { MenuNavbar } from "./menu-navigation";
 import { Skeleton } from "../ui/skeleton";
 import { DarkMode } from "../ui/dark-mode";
+import { AuthServer } from "../profile/auth-server";
 
 const HeaderSection = () => {
   return (
@@ -12,6 +13,7 @@ const HeaderSection = () => {
           <Logo />
           <div className="flex items-center gap-2">
             <DarkMode />
+            <AuthServer />
           </div>
         </div>
         <Suspense fallback={<Skeleton className="h-9 w-[250px]" />}>
