@@ -11,7 +11,7 @@ const Page = async ({ params }: PageDynamic) => {
   const { product: slug, category } = await params;
 
   const product = await api.product.slug({ slug });
-  await api.rating.getbyslug.prefetch({ slug, limit: 4 });
+  void api.rating.getbyslug.prefetch({ slug, limit: 4 });
   if (!product) {
     return notFound();
   }
