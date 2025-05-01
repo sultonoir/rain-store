@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,19 +9,31 @@ import { fromNow } from "@/lib/from-now";
 import { blurhashToDataUri } from "@unpic/placeholder";
 import PaginationState from "../ui/pagination-state";
 
-const ReviewCards = ({
-  slug,
-  totalPages,
-}: {
+type Props = {
   slug: string;
   totalPages: number;
-}) => {
+};
+
+const ReviewCards = ({ slug, totalPages }: Props) => {
   const [cursor, setCursor] = useState(1);
+
   const [data] = api.rating.getbyslug.useSuspenseQuery({
     slug,
     limit: 4,
     cursor,
   });
+
+  // Prefetch halaman berikutnya jika masih ada
+  const utils = api.useUtils();
+  useEffect(() => {
+    if (cursor < Math.ceil(totalPages / 4)) {
+      void utils.rating.getbyslug.prefetch({
+        slug,
+        limit: 4,
+        cursor: cursor + 1,
+      });
+    }
+  }, [cursor, slug, totalPages, utils]);
 
   return (
     <div className="order-2 mb-8 flex w-full flex-col gap-10 lg:order-1">
@@ -64,6 +77,7 @@ const ReviewCards = ({
           </div>
         ))}
       </div>
+
       <PaginationState
         totalPages={Math.ceil(totalPages / 4)}
         currentPage={cursor}
