@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -9,36 +9,51 @@ import { fromNow } from "@/lib/from-now";
 import { blurhashToDataUri } from "@unpic/placeholder";
 import PaginationState from "../ui/pagination-state";
 
+interface InitialData {
+  ratings: {
+    value: number;
+    message: string;
+    id: string;
+    createdAt: Date;
+    user: {
+      name: string;
+      image: string;
+      imageBlur: string;
+    };
+  }[];
+  nextCursor: number;
+}
+
 type Props = {
   slug: string;
   totalPages: number;
+  initialData: InitialData;
 };
 
-const ReviewCards = ({ slug, totalPages }: Props) => {
+const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
+  const [ratings, setRatings] = useState(initialData.ratings);
   const [cursor, setCursor] = useState(1);
 
-  const [data] = api.rating.getbyslug.useSuspenseQuery({
-    slug,
-    limit: 4,
-    cursor,
-  });
-
-  // Prefetch halaman berikutnya jika masih ada
   const utils = api.useUtils();
-  useEffect(() => {
-    if (cursor < Math.ceil(totalPages / 4)) {
-      void utils.rating.getbyslug.prefetch({
+
+  const handlePageChange = async (page: number) => {
+    try {
+      const result = await utils.rating.getbyslug.fetch({
         slug,
         limit: 4,
-        cursor: cursor + 1,
+        cursor: page,
       });
+      setRatings(result.ratings);
+      setCursor(page);
+    } catch (e) {
+      console.error("Failed to load ratings", e);
     }
-  }, [cursor, slug, totalPages, utils]);
+  };
 
   return (
     <div className="order-2 mb-8 flex w-full flex-col gap-10 lg:order-1">
       <div className="grid w-full gap-1 divide-y md:grid-cols-1">
-        {data.ratings.map((result) => (
+        {ratings.map((result) => (
           <div
             key={result.id}
             className="flex items-center justify-between gap-5 py-4 first:pt-0 last:pb-0"
@@ -81,7 +96,8 @@ const ReviewCards = ({ slug, totalPages }: Props) => {
       <PaginationState
         totalPages={Math.ceil(totalPages / 4)}
         currentPage={cursor}
-        onPageChange={(page) => setCursor(page)}
+        onPageChange={handlePageChange}
+        paginationItemsToDisplay={7}
       />
     </div>
   );

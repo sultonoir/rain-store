@@ -27,7 +27,8 @@ const Page = async ({ params }: PageDynamic) => {
   const { product: slug, category } = await params;
 
   const product = await api.product.slug({ slug });
-  void api.rating.getbyslug.prefetch({ slug, limit: 4 });
+  const initRating = await api.rating.getbyslug({ slug, limit: 4 });
+
   if (!product) {
     return notFound();
   }
@@ -44,7 +45,11 @@ const Page = async ({ params }: PageDynamic) => {
               count={product.ratingCount}
               stats={product.ratingStatistics}
             />
-            <ReviewCards slug={slug} totalPages={product.ratingCount} />
+            <ReviewCards
+              slug={slug}
+              totalPages={product.ratingCount}
+              initialData={initRating}
+            />
           </div>
         </div>
         <ProductCarousel category={category} />
