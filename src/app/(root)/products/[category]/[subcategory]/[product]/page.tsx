@@ -3,8 +3,7 @@ import ProductPage from "@/components/product/product-page";
 import ReviewCards from "@/components/review/review-cards";
 import ReviewStats from "@/components/review/review-stats";
 import { getProductBySlug } from "@/server/product/products-service";
-import { getRatingByProductSlug } from "@/server/rating/rating-service";
-import type { PageDynamic } from "@/types";
+import type { PageDynamic, RatingWithuser } from "@/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -24,11 +23,24 @@ export async function generateMetadata({
   };
 }
 
+async function getRatingByProductSlug(slug: string) {
+  const response = await fetch(
+    `${process.env.PUBLIC_BETTER_URL}/api/ratings/${slug}?page=1`,
+  );
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const data = (await response.json()) as RatingWithuser[];
+  return data;
+}
+
 const Page = async ({ params }: PageDynamic) => {
   const { product: slug, category } = await params;
 
   const fetchProduct = getProductBySlug(slug);
-  const fetchRatings = getRatingByProductSlug(slug, 1, 4);
+  const fetchRatings = getRatingByProductSlug(slug);
 
   const [product, initRating] = await Promise.all([fetchProduct, fetchRatings]);
 

@@ -8,7 +8,6 @@ import { fromNow } from "@/lib/from-now";
 import { blurhashToDataUri } from "@unpic/placeholder";
 import PaginationState from "../ui/pagination-state";
 import { RatingWithuser } from "@/types";
-import { getRatingByProductSlug } from "@/server/rating/rating-service";
 
 type Props = {
   slug: string;
@@ -17,22 +16,38 @@ type Props = {
 };
 
 const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
+  const [isPending, setIsPending] = useState(false);
   const [ratings, setRatings] = useState(initialData);
   const [cursor, setCursor] = useState(1);
 
   const handlePageChange = async (page: number) => {
     try {
-      const result = await getRatingByProductSlug(slug, page, 4);
-      setRatings(result);
+      setIsPending(true);
+      const response = await fetch(`/api/ratings/${slug}?page=${page}`);
+
+      if (!response.ok) {
+        return [];
+      }
+      const data = (await response.json()) as RatingWithuser[];
+      setRatings(data);
       setCursor(page);
     } catch (e) {
-      console.error("Failed to load ratings", e);
+      setIsPending(false);
+      console.log("Failed to load ratings", e);
+      setCursor(page);
+      setRatings([]);
+    } finally {
+      setIsPending(false);
     }
   };
 
   return (
     <div className="order-2 mb-8 flex w-full flex-col gap-10 lg:order-1">
-      <div className="grid w-full gap-1 divide-y md:grid-cols-1">
+      <div
+        className={cn("grid w-full gap-1 divide-y md:grid-cols-1", {
+          "opacity-75": isPending,
+        })}
+      >
         {ratings.map((result) => (
           <div
             key={result.id}

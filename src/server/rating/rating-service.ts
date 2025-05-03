@@ -4,7 +4,15 @@ import { db } from "../db";
 import { unstable_cache } from "../unstable-chache";
 
 export const getRatingByProductSlug = unstable_cache(
-  async (slug: string, page: number, take: number) => {
+  async ({
+    slug,
+    page,
+    take,
+  }: {
+    slug: string;
+    page: number;
+    take: number;
+  }) => {
     const skip = (page - 1) * take;
     return await db.rating.findMany({
       where: {
