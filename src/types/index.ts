@@ -1,4 +1,4 @@
-import type { SearchProductsParams } from "@/server/api/routers/product/products-input";
+import { SearchProductsParams } from "@/server/product/products-input";
 import type { Media, Product, Rating, Variant } from "@prisma/client";
 
 export type ProductCard = Product & {
@@ -49,8 +49,9 @@ export type Pagination = {
 
 export type RatingWithuser = Rating & {
   user: {
-    name: string | null;
-    image: string | null;
+    name: string;
+    image: string;
+    imageBlur: string;
   };
 };
 

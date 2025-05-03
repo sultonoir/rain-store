@@ -6,8 +6,8 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import CardProduct from "@/components/product/product-card";
-import type { SearchProductsParams } from "@/server/api/routers/product/products-input";
-import { api } from "@/trpc/server";
+import type { SearchProductsParams } from "@/server/product/products-input";
+import { getProducts } from "@/server/product/products-service";
 
 interface Props extends SearchProductsParams {
   title?: string;
@@ -19,7 +19,7 @@ async function ProductCarousel({
   category,
   subcategory,
 }: Props) {
-  const products = await api.product.getProducts({
+  const products = await getProducts({
     sort,
     category,
     subcategory,

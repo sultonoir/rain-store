@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { env } from "@/env";
 
 export function SigninForm({
   className,
@@ -73,8 +72,8 @@ export function SigninForm({
   const handleGuestSignin = async () => {
     await authClient.signIn.email(
       {
-        email: env.NEXT_PUBLIC_EMAIL_GUEST,
-        password: env.NEXT_PUBLIC_PASSWORD_GUEST,
+        email: process.env.NEXT_PUBLIC_EMAIL_GUEST!,
+        password: process.env.NEXT_PUBLIC_PASSWORD_GUEST!,
         callbackURL,
       },
       {

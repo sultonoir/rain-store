@@ -1,10 +1,12 @@
+import Provider from "@/provider/provider";
 import "@/styles/globals.css";
-
-import { type Metadata } from "next";
+import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
-import { TRPCReactProvider } from "@/trpc/react";
-import Provider from "@/provider/provider";
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -71,20 +73,15 @@ export const metadata: Metadata = {
   },
 };
 
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
-
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" className={`${geist.className}`} suppressHydrationWarning>
-      <body>
-        <TRPCReactProvider>
-          <Provider>{children}</Provider>
-        </TRPCReactProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.className} antialiased`}>
+        <Provider>{children}</Provider>
       </body>
     </html>
   );

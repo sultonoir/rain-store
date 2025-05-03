@@ -13,7 +13,7 @@ const Logo = ({ className }: React.ComponentProps<"a">) => {
       )}
     >
       <Image src="/logo.png" height={40} width={40} alt="logo" priority />
-      <p className="hidden text-lg font-bold lg:block">Rizal Official Store</p>
+      <p className="hidden text-lg font-bold lg:block">Rizal Official</p>
     </Link>
   );
 };

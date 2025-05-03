@@ -4,46 +4,26 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { api } from "@/trpc/react";
 import { fromNow } from "@/lib/from-now";
 import { blurhashToDataUri } from "@unpic/placeholder";
 import PaginationState from "../ui/pagination-state";
-
-interface InitialData {
-  ratings: {
-    value: number;
-    message: string;
-    id: string;
-    createdAt: Date;
-    user: {
-      name: string;
-      image: string;
-      imageBlur: string;
-    };
-  }[];
-  nextCursor: number;
-}
+import { RatingWithuser } from "@/types";
+import { getRatingByProductSlug } from "@/server/rating/rating-service";
 
 type Props = {
   slug: string;
   totalPages: number;
-  initialData: InitialData;
+  initialData: RatingWithuser[];
 };
 
 const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
-  const [ratings, setRatings] = useState(initialData.ratings);
+  const [ratings, setRatings] = useState(initialData);
   const [cursor, setCursor] = useState(1);
-
-  const utils = api.useUtils();
 
   const handlePageChange = async (page: number) => {
     try {
-      const result = await utils.rating.getbyslug.fetch({
-        slug,
-        limit: 4,
-        cursor: page,
-      });
-      setRatings(result.ratings);
+      const result = await getRatingByProductSlug(slug, page, 4);
+      setRatings(result);
       setCursor(page);
     } catch (e) {
       console.error("Failed to load ratings", e);

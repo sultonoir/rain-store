@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { api } from "@/trpc/server";
+import { getCategories } from "@/server/category/category-service";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
 
 export const MenuNavbar = async ({ className }: Props) => {
-  const categories = await api.category.getCategories();
+  const categories = await getCategories();
   return (
     <div className="flex items-center justify-between">
       <NavigationMenu>
