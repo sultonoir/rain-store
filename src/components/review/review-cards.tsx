@@ -8,6 +8,8 @@ import { fromNow } from "@/lib/from-now";
 import { blurhashToDataUri } from "@unpic/placeholder";
 import PaginationState from "../ui/pagination-state";
 import { RatingWithuser } from "@/types";
+import { useRouter } from "next/navigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Props = {
   slug: string;
@@ -16,14 +18,18 @@ type Props = {
 };
 
 const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
+  const isMobile = useIsMobile();
+  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [ratings, setRatings] = useState(initialData);
   const [cursor, setCursor] = useState(1);
 
   const handlePageChange = async (page: number) => {
+    const pathname = `/api/ratings/${slug}?page=${page}`;
     try {
       setIsPending(true);
-      const response = await fetch(`/api/ratings/${slug}?page=${page}`);
+      router.prefetch(pathname);
+      const response = await fetch(pathname);
 
       if (!response.ok) {
         return [];
@@ -92,7 +98,7 @@ const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
         totalPages={Math.ceil(totalPages / 4)}
         currentPage={cursor}
         onPageChange={handlePageChange}
-        paginationItemsToDisplay={7}
+        paginationItemsToDisplay={isMobile ? 5 : 7}
       />
     </div>
   );

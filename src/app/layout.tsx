@@ -1,4 +1,6 @@
+import { CategoryProvider } from "@/provider/category-provider";
 import Provider from "@/provider/provider";
+import { getCategories } from "@/server/category/category-service";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
@@ -78,10 +80,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const category = getCategories();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
+        <CategoryProvider categoriesPromise={category} >
         <Provider>{children}</Provider>
+        </CategoryProvider>
       </body>
     </html>
   );

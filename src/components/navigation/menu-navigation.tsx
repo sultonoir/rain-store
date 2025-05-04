@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { use } from "react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,12 +10,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { getCategories } from "@/server/category/category-service";
+import { useCategory } from "@/provider/category-provider";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
 
-export const MenuNavbar = async ({ className }: Props) => {
-  const categories = await getCategories();
+export const MenuNavbar = ({ className }: Props) => {
+  const { categoriesPromise } = useCategory();
+  const categories = use(categoriesPromise);
   return (
     <div className="flex items-center justify-between">
       <NavigationMenu>

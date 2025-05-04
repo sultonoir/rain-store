@@ -61,23 +61,23 @@ export default function CartCard({ cart, action, className }: Props) {
         />
       </div>
       <div className="flex w-full flex-1 flex-col">
-        <h3 className="line-clamp-1 text-[16px] font-bold leading-normal">
+        <h3 className="line-clamp-1 text-[16px] leading-normal font-bold">
           {cart.name}
         </h3>
-        <div className="mt-1 flex h-5 space-x-2">
-          <p className="text-sm text-muted-foreground">Size: {cart.size}</p>
+        <div className="mt-1 flex h-5 items-center space-x-2">
+          <p className="text-muted-foreground text-sm">Size: {cart.size}</p>
           <Separator orientation="vertical" className="h-full w-0.5" />
           <NumberFlow
             value={cart.amount}
             format={{ useGrouping: false }}
             aria-hidden
             animated={true}
-            className="pointer-events-none"
+            className="pointer-events-none leading-none"
             willChange
           />
         </div>
         {action && (
-          <div className="mt-auto flex w-fit gap-3 rounded-lg bg-muted p-1 dark:bg-muted/50">
+          <div className="bg-muted dark:bg-muted/50 mt-auto flex w-fit gap-3 rounded-lg p-1">
             <Button
               className="size-6 disabled:cursor-not-allowed"
               onClick={decrement}

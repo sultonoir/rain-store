@@ -1,228 +1,120 @@
 "use client";
+import {
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-react";
 
-import { type ReactNode, useCallback } from "react";
+import { usePagination } from "@/hooks/use-pagination";
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "./pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./select";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/pagination";
+import { usePathname } from "next/navigation";
 
-export interface PaginationWithLinksProps {
-  pageSizeSelectOptions?: {
-    pageSizeSearchParam?: string;
-    pageSizeOptions: number[];
-  };
-  totalCount: number;
-  pageSize: number;
-  page: number;
-  pageSearchParam?: string;
-}
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+  paginationItemsToDisplay?: number;
+};
 
-/**
- * Navigate with Nextjs links (need to update your own `pagination.tsx` to use Nextjs Link)
- * 
- * @example
- * ```
- * <PaginationWithLinks
-    page={1}
-    pageSize={20}
-    totalCount={500}
-  />
- * ```
- */
-export function PaginationWithLinks({
-  pageSizeSelectOptions,
-  pageSize,
-  totalCount,
-  page,
-  pageSearchParam,
-}: PaginationWithLinksProps) {
-  const router = useRouter();
+export default function PaginateWithLink({
+  currentPage,
+  totalPages,
+  paginationItemsToDisplay = 5,
+}: PaginationProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { pages, showLeftEllipsis, showRightEllipsis } = usePagination({
+    currentPage,
+    totalPages,
+    paginationItemsToDisplay,
+  });
 
-  const totalPageCount = Math.ceil(totalCount / pageSize);
-
-  const buildLink = useCallback(
-    (newPage: number) => {
-      const key = pageSearchParam ?? "page";
-      if (!searchParams) return `${pathname}?${key}=${newPage}`;
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.set(key, String(newPage));
-      return `${pathname}?${newSearchParams.toString()}`;
-    },
-    [pageSearchParam, searchParams, pathname],
-  );
-
-  const navToPageSize = useCallback(
-    (newPageSize: number) => {
-      const key = pageSizeSelectOptions?.pageSizeSearchParam ?? "pageSize";
-      const newSearchParams = new URLSearchParams(searchParams ?? undefined);
-      newSearchParams.set(key, String(newPageSize));
-      newSearchParams.delete(pageSearchParam ?? "page"); // Clear the page number when changing page size
-      router.push(`${pathname}?${newSearchParams.toString()}`);
-    },
-    [
-      pageSizeSelectOptions?.pageSizeSearchParam,
-      searchParams,
-      pageSearchParam,
-      router,
-      pathname,
-    ],
-  );
-
-  const renderPageNumbers = () => {
-    const items: ReactNode[] = [];
-    const maxVisiblePages = 5;
-
-    if (totalPageCount <= maxVisiblePages) {
-      for (let i = 1; i <= totalPageCount; i++) {
-        items.push(
-          <PaginationItem key={i}>
-            <PaginationLink href={buildLink(i)} isActive={page === i}>
-              {i}
-            </PaginationLink>
-          </PaginationItem>,
-        );
-      }
-    } else {
-      items.push(
-        <PaginationItem key={1}>
-          <PaginationLink href={buildLink(1)} isActive={page === 1}>
-            1
-          </PaginationLink>
-        </PaginationItem>,
-      );
-
-      if (page > 3) {
-        items.push(
-          <PaginationItem key="ellipsis-start">
-            <PaginationEllipsis />
-          </PaginationItem>,
-        );
-      }
-
-      const start = Math.max(2, page - 1);
-      const end = Math.min(totalPageCount - 1, page + 1);
-
-      for (let i = start; i <= end; i++) {
-        items.push(
-          <PaginationItem key={i}>
-            <PaginationLink href={buildLink(i)} isActive={page === i}>
-              {i}
-            </PaginationLink>
-          </PaginationItem>,
-        );
-      }
-
-      if (page < totalPageCount - 2) {
-        items.push(
-          <PaginationItem key="ellipsis-end">
-            <PaginationEllipsis />
-          </PaginationItem>,
-        );
-      }
-
-      items.push(
-        <PaginationItem key={totalPageCount}>
+  return (
+    <Pagination>
+      <PaginationContent>
+        {/* First page button */}
+        <PaginationItem>
           <PaginationLink
-            href={buildLink(totalPageCount)}
-            isActive={page === totalPageCount}
+            className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            href={`${pathname}?page=${currentPage - 1}`}
+            aria-label="Go to first page"
+            aria-disabled={currentPage === 1 ? true : undefined}
+            role={currentPage === 1 ? "link" : undefined}
           >
-            {totalPageCount}
+            <ChevronFirstIcon size={16} aria-hidden="true" />
           </PaginationLink>
-        </PaginationItem>,
-      );
-    }
+        </PaginationItem>
 
-    return items;
-  };
+        {/* Previous page button */}
+        <PaginationItem>
+          <PaginationLink
+            className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            href={`${pathname}?page=${currentPage - 1}`}
+            aria-label="Go to previous page"
+            aria-disabled={currentPage === 1 ? true : undefined}
+            role={currentPage === 1 ? "link" : undefined}
+          >
+            <ChevronLeftIcon size={16} aria-hidden="true" />
+          </PaginationLink>
+        </PaginationItem>
 
-  return (
-    <div className="flex w-full flex-col items-center gap-3 md:flex-row">
-      {pageSizeSelectOptions && (
-        <div className="flex flex-1 flex-col gap-4">
-          <SelectRowsPerPage
-            options={pageSizeSelectOptions.pageSizeOptions}
-            setPageSize={navToPageSize}
-            pageSize={pageSize}
-          />
-        </div>
-      )}
-      <Pagination className={cn({ "md:justify-end": pageSizeSelectOptions })}>
-        <PaginationContent className="max-sm:gap-0">
+        {/* Left ellipsis (...) */}
+        {showLeftEllipsis && (
           <PaginationItem>
-            <PaginationPrevious
-              href={buildLink(Math.max(page - 1, 1))}
-              aria-disabled={page === 1}
-              tabIndex={page === 1 ? -1 : undefined}
-              className={
-                page === 1 ? "pointer-events-none opacity-50" : undefined
-              }
-            />
+            <PaginationEllipsis />
           </PaginationItem>
-          {renderPageNumbers()}
+        )}
+
+        {/* Page number links */}
+        {pages.map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              href={`${pathname}?page=${page}`}
+              isActive={page === currentPage}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {/* Right ellipsis (...) */}
+        {showRightEllipsis && (
           <PaginationItem>
-            <PaginationNext
-              href={buildLink(Math.min(page + 1, totalPageCount))}
-              aria-disabled={page === totalPageCount}
-              tabIndex={page === totalPageCount ? -1 : undefined}
-              className={
-                page === totalPageCount
-                  ? "pointer-events-none opacity-50"
-                  : undefined
-              }
-            />
+            <PaginationEllipsis />
           </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </div>
-  );
-}
+        )}
 
-function SelectRowsPerPage({
-  options,
-  setPageSize,
-  pageSize,
-}: {
-  options: number[];
-  setPageSize: (newSize: number) => void;
-  pageSize: number;
-}) {
-  return (
-    <div className="flex items-center gap-4">
-      <span className="text-sm whitespace-nowrap">Rows per page</span>
+        {/* Next page button */}
+        <PaginationItem>
+          <PaginationLink
+            className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            href={`${pathname}?page=${currentPage + 1}`}
+            aria-label="Go to next page"
+            aria-disabled={currentPage === totalPages ? true : undefined}
+            role={currentPage === totalPages ? "link" : undefined}
+          >
+            <ChevronRightIcon size={16} aria-hidden="true" />
+          </PaginationLink>
+        </PaginationItem>
 
-      <Select
-        value={String(pageSize)}
-        onValueChange={(value) => setPageSize(Number(value))}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select page size">
-            {String(pageSize)}
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={option} value={String(option)}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+        {/* Last page button */}
+        <PaginationItem>
+          <PaginationLink
+            className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            href={`${pathname}?page=${totalPages}`}
+            aria-label="Go to last page"
+            aria-disabled={currentPage === totalPages ? true : undefined}
+            role={currentPage === totalPages ? "link" : undefined}
+          >
+            <ChevronLastIcon size={16} aria-hidden="true" />
+          </PaginationLink>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 }

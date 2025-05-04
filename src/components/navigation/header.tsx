@@ -3,6 +3,7 @@ import Logo from "./logo";
 import { MenuNavbar } from "./menu-navigation";
 import { DarkMode } from "../ui/dark-mode";
 import { AuthServer } from "../profile/auth-server";
+import CartButton from "../cart/cart-button";
 
 const HeaderSection = () => {
   return (
@@ -11,12 +12,13 @@ const HeaderSection = () => {
         <div className="flex items-center justify-between gap-4">
           <Logo />
           <div className="flex items-center gap-2">
+            <CartButton />
             <DarkMode />
             <AuthServer />
           </div>
         </div>
         <Suspense>
-          <MenuNavbar />
+          <MenuNavbar className="hidden sm:flex" />
         </Suspense>
       </div>
     </div>

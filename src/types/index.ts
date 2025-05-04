@@ -75,8 +75,8 @@ export type PageDynamic = {
 };
 
 export type SearchProductsClient = {
-  params?: { category?: string; subcategory?: string };
-  title: string;
+  params: { category: string; subcategory: string; product: string };
+  title?: string;
   searchParams: SearchProductsParams;
 };
 

@@ -12,13 +12,13 @@ const ProductLoading = forwardRef<HTMLDivElement, Props>(
       <div
         ref={ref}
         className={cn(
-          "grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-6",
+          "grid w-full grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-6",
           className,
         )}
       >
         {Array.from({ length }).map((_, index) => (
           <div
-            className="flex flex-col space-y-3 rounded-2xl bg-muted/20 p-2"
+            className="bg-muted/20 flex flex-col space-y-3 rounded-2xl p-2"
             key={index}
           >
             <Skeleton className="h-[225px] rounded-xl" />
