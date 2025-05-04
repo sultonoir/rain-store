@@ -17,10 +17,13 @@ const ReviewStats = ({ average, count, stats }: ReviewStatsProps) => {
   const ratingMap = new Map(stats.map((r) => [r.ratingValue, r.ratingCount]));
 
   // Buat array final lengkap 1–5
-  const completeStats = allRatings.map((value) => ({
-    ratingValue: value,
-    ratingCount: ratingMap.get(value) ?? 0,
-  }));
+  const completeStats = allRatings
+    .map((value) => ({
+      ratingValue: value,
+      ratingCount: ratingMap.get(value) ?? 0,
+    }))
+    .reverse();
+
   return (
     <div className="order-1 mb-8 w-full flex-none lg:order-2 lg:max-w-sm">
       <div className="bg-card rounded-lg border p-6 shadow-sm">
@@ -43,23 +46,21 @@ const ReviewStats = ({ average, count, stats }: ReviewStatsProps) => {
             </div>
           </div>
           <div className="flex w-full flex-1 flex-col gap-2">
-            {completeStats
-              .map((rating, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="min-w-[60px] flex-shrink-0 text-sm whitespace-nowrap">
-                    {rating.ratingValue} stars
-                  </div>
-                  <Progress
-                    value={(rating.ratingCount / count) * 100}
-                    className="w-full flex-grow"
-                    aria-label="rating percentage"
-                  />
-                  <div className="text-muted-foreground min-w-[30px] flex-shrink-0 text-right text-sm whitespace-nowrap">
-                    {rating.ratingCount}
-                  </div>
+            {completeStats.map((rating, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <div className="min-w-[60px] flex-shrink-0 text-sm whitespace-nowrap">
+                  {rating.ratingValue} stars
                 </div>
-              ))
-              .reverse()}
+                <Progress
+                  value={(rating.ratingCount / count) * 100}
+                  className="w-full flex-grow"
+                  aria-label="rating percentage"
+                />
+                <div className="text-muted-foreground min-w-[30px] flex-shrink-0 text-right text-sm whitespace-nowrap">
+                  {rating.ratingCount}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

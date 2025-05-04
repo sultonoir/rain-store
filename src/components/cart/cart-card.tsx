@@ -50,12 +50,12 @@ export default function CartCard({ cart, action, className }: Props) {
     >
       <div className="relative h-[100px] w-20 flex-shrink-0 overflow-hidden rounded-sm">
         <Image
-          src={cart.media.url}
+          src={cart.media?.url}
           alt={cart.name}
           layout="constrained"
           width={200}
           height={300}
-          background={blurhashToDataUri(cart.media.blur)}
+          background={blurhashToDataUri(cart.media?.blur)}
           className="object-cover"
           sizes="100%"
         />

@@ -13,6 +13,7 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   paginationItemsToDisplay?: number;
+  isPending: boolean;
   onPageChange: (page: number) => void;
 };
 
@@ -21,6 +22,7 @@ export default function PaginationState({
   totalPages,
   paginationItemsToDisplay = 5,
   onPageChange,
+  isPending,
 }: PaginationProps) {
   const { pages, showLeftEllipsis, showRightEllipsis } = usePagination({
     currentPage,
@@ -36,6 +38,7 @@ export default function PaginationState({
           <PaginationPreviousButton
             onClick={() => onPageChange(currentPage - 1)}
             className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            disabled={isPending}
             aria-disabled={currentPage === 1 ? true : undefined}
             role={currentPage === 1 ? "link" : undefined}
             size="default"
@@ -53,6 +56,7 @@ export default function PaginationState({
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationButton
+              disabled={isPending}
               onClick={() => onPageChange(page)}
               isActive={page === currentPage}
             >
@@ -72,6 +76,7 @@ export default function PaginationState({
         <PaginationItem>
           <PaginationNextButton
             className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            disabled={isPending}
             aria-disabled={currentPage === totalPages ? true : undefined}
             size="default"
             role={currentPage === totalPages ? "link" : undefined}

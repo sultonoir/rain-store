@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,6 @@ import { fromNow } from "@/lib/from-now";
 import { blurhashToDataUri } from "@unpic/placeholder";
 import PaginationState from "../ui/pagination-state";
 import { RatingWithuser } from "@/types";
-import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 type Props = {
@@ -19,33 +18,49 @@ type Props = {
 
 const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
   const isMobile = useIsMobile();
-  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [ratings, setRatings] = useState(initialData);
   const [cursor, setCursor] = useState(1);
+  const [cache, setCache] = useState<Record<number, RatingWithuser[]>>({
+    1: initialData,
+  });
 
-  const handlePageChange = async (page: number) => {
-    const pathname = `/api/ratings/${slug}?page=${page}`;
-    try {
-      setIsPending(true);
-      router.prefetch(pathname);
-      const response = await fetch(pathname);
+  const handlePageChange = useCallback(
+    async (page: number) => {
+      if (page === cursor) return;
 
-      if (!response.ok) {
-        return [];
+      setCursor(page);
+
+      if (cache[page]) {
+        // gunakan cache jika sudah tersedia
+        setRatings(cache[page]);
+        return;
       }
-      const data = (await response.json()) as RatingWithuser[];
-      setRatings(data);
-      setCursor(page);
-    } catch (e) {
-      setIsPending(false);
-      console.log("Failed to load ratings", e);
-      setCursor(page);
-      setRatings([]);
-    } finally {
-      setIsPending(false);
+
+      try {
+        setIsPending(true);
+        const res = await fetch(`/api/ratings/${slug}?page=${page}`);
+        if (!res.ok) throw new Error("Failed to fetch ratings");
+
+        const data = (await res.json()) as RatingWithuser[];
+
+        setRatings(data);
+        setCache((prev) => ({ ...prev, [page]: data }));
+      } catch (err) {
+        console.error("Error loading ratings", err);
+        setRatings([]);
+      } finally {
+        setIsPending(false);
+      }
+    },
+    [cache, cursor, slug],
+  );
+
+  useEffect(() => {
+    if (!cache[cursor]) {
+      handlePageChange(cursor);
     }
-  };
+  }, [cache, cursor, handlePageChange]);
 
   return (
     <div className="order-2 mb-8 flex w-full flex-col gap-10 lg:order-1">
@@ -98,6 +113,7 @@ const ReviewCards = ({ slug, totalPages, initialData }: Props) => {
         totalPages={Math.ceil(totalPages / 4)}
         currentPage={cursor}
         onPageChange={handlePageChange}
+        isPending={isPending}
         paginationItemsToDisplay={isMobile ? 5 : 7}
       />
     </div>
