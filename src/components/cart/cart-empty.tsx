@@ -19,14 +19,14 @@ export default function CartEmpty() {
         />
       </div>
       <h4 className="font-medium">Your cart is empty</h4>
-      <p className="text-[14px] leading-tight text-muted-foreground">
+      <p className="text-muted-foreground text-[14px] leading-tight">
         Looks like you haven&apos;t made your choice yey...
       </p>
       <Link
-        href="/collections"
+        href="/products"
         prefetch={true}
         onClick={setCartOpen}
-        className="mt-1 rounded-lg bg-primary px-3 py-1 text-white hover:bg-primary/80"
+        className="bg-primary hover:bg-primary/80 mt-1 rounded-lg px-3 py-1 text-white"
       >
         Continue Shopping
       </Link>

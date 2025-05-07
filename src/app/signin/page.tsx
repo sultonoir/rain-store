@@ -1,4 +1,4 @@
-import { SigninForm } from "@/form/auth/signin-form";
+import { SigninForm } from "@/components/form/auth/signin-form";
 import { type Metadata } from "next";
 import React, { Suspense } from "react";
 

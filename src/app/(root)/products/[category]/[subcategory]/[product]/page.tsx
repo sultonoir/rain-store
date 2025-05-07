@@ -49,7 +49,7 @@ const Page = async ({ params }: PageDynamic) => {
   }
 
   return (
-    <div className="container space-y-10 py-5">
+    <div className="mx-auto w-full space-y-10 py-5">
       <ProductPage data={product} />
       <div className="relative w-full">
         <h1 className="mb-8 text-4xl font-bold">Customer Reviews</h1>

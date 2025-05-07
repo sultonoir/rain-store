@@ -26,7 +26,7 @@ export default function FilterPage({
         title={title}
         count={results.totalProduct}
       />
-      <div className="mb-4 grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
+      <div className="mb-4 grid grid-cols-2 gap-5 lg:grid-cols-3 xl:grid-cols-4">
         {results.products.map((item) => (
           <ProductCard key={item.id} product={item} />
         ))}

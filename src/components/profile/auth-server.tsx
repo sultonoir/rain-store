@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
 import { ProfileButton } from "./profile-button";
 import { User2 } from "lucide-react";
+import CartButton from "../cart/cart-button";
+import NotifiButton from "../notifi/notifi-button";
 
 export const AuthServer = async () => {
   const session = await auth.api.getSession({
@@ -15,6 +17,7 @@ export const AuthServer = async () => {
   if (!session?.user) {
     return (
       <>
+        <CartButton />
         <Link
           href="/signin"
           prefetch={true}
@@ -28,7 +31,7 @@ export const AuthServer = async () => {
         <Link
           href="/signin"
           className={cn(
-            "flex flex-col items-center justify-center text-xs font-medium hover:text-primary lg:hidden",
+            "hover:text-primary flex flex-col items-center justify-center text-xs font-medium lg:hidden",
           )}
         >
           <User2 />
@@ -38,5 +41,17 @@ export const AuthServer = async () => {
     );
   }
 
-  return <ProfileButton {...session.user} />;
+  return (
+    <>
+      <div className="order-2 lg:order-1">
+        <CartButton />
+      </div>
+      <div className="order-1 md:order-2">
+        <NotifiButton userId={session.user.id} />
+      </div>
+      <div className="order-3">
+        <ProfileButton {...session.user} />
+      </div>
+    </>
+  );
 };

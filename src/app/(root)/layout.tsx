@@ -1,5 +1,6 @@
 import FooterSection from "@/components/navigation/footer";
 import HeaderSection from "@/components/navigation/header";
+import NavbarMobile from "@/components/navigation/nav-mobile";
 import React from "react";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -8,6 +9,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <HeaderSection />
       {children}
       <FooterSection />
+      <NavbarMobile />
     </>
   );
 };

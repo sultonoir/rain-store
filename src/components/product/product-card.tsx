@@ -13,7 +13,7 @@ type Props = {
 
 const ProductCard = ({ product }: Props) => {
   return (
-    <Card className="relative isolate gap-4 overflow-hidden rounded-2xl border p-2 shadow-lg">
+    <Card className="relative isolate gap-2 overflow-hidden rounded-2xl border p-2 shadow-lg">
       <Image
         alt={product.name}
         src={product.media.url}
@@ -23,7 +23,7 @@ const ProductCard = ({ product }: Props) => {
         background={blurhashToDataUri(product.media.blur)}
         className="rounded-lg object-cover"
       />
-      <CardContent className="space-y-1 p-2">
+      <CardContent className="space-y-2 p-2">
         <CardTitle className="w-[calc(100%-1px)] truncate text-base font-normal">
           <Link
             href={`/products/${product.category}/${product.subcategory}/${product.slug}`}

@@ -48,7 +48,7 @@ export default function FilterHeader({
           </h1>
         )}
         <p className="text-muted-foreground text-sm whitespace-nowrap md:text-sm lg:mt-1 lg:text-base lg:leading-9">
-          {count} items
+          {count} Products
         </p>
       </div>
       <div className="flex items-center justify-end gap-2 self-end">

@@ -203,7 +203,7 @@ model Revenue {
   endDate     DateTime
   updatedAt   DateTime @updatedAt
 
-  @@unique([period, startDate, endDate])
+  @@unique([period, startDate, endDate], name: "revenueperiod")
   @@index([period])
 }
 
@@ -233,7 +233,7 @@ model Sale {
   updatedAt   DateTime   @updatedAt
   product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@unique([productId, status])
+  @@unique([productId, status], name: "productstatus")
   @@index([productId, status])
 }
 
@@ -267,7 +267,7 @@ model RatingStatistics {
   productId   String
   product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@unique([ratingValue, productId])
+  @@unique([ratingValue, productId], name: "ratingproduct")
   @@index([ratingValue])
   @@index([productId])
 }
@@ -281,17 +281,17 @@ enum OrderStatus {
 }
 
 model Order {
-  id            String      @id @unique @default(nanoid(10))
-  totalAmount   Float // Total uang yang dibayar
-  status        OrderStatus @default(pending)
-  userId        String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  totalQuantity Int // Jumlah total barang yang dibeli
-  Notifi        Notifi[]
-  Complain      Complain[]
-  checkoutItem  OrderItem[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id           String      @id @unique @default(nanoid(10))
+  totalPrice   Float // Total uang yang dibayar
+  status       OrderStatus @default(pending)
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalProduct Int // Jumlah total barang yang dibeli
+  Notifi       Notifi[]
+  Complain     Complain[]
+  checkoutItem OrderItem[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
   @@index([id], type: Hash)
   @@index([userId], type: Hash)
@@ -315,20 +315,41 @@ model OrderItem {
 }
 
 enum NotificationStatus {
-  PaymentUpdate // Pembaruan atau notifikasi terkait pembayaran
-  Promo // Promosi atau penawaran
-  OrderPending // Pesanan sedang menunggu proses atau konfirmasi
-  OrderShipped // Barang sudah dikirim atau pembaruan penerima
-  Rating // Notifikasi untuk rating produk atau layanan
-  ComplaintFiled // Keluhan telah diajukan atau pembaruan keluhan
-  OrderCanceled // Pesanan dibatalkan
+  // === Payment untuk User ===
+  UserPaymentPending
+  UserPaymentConfirmed
+  UserPaymentFailed
+
+  // === Payment untuk Admin ===
+  AdminPaymentReceived
+  AdminPaymentConfirmed
+
+  // === Promo & Informasi ===
+  Promo
+  Coupon
+
+  // === Order ===
+  OrderPending
+  OrderShipped
+  OrderCanceled
+  OrderReceived // ✅ Baru: User sudah menerima pesanan
+
+  // === Lainnya ===
+  Rating
+  ComplaintFiled
+  ComplaintResponded
 }
 
 model Notifi {
   id         String             @id @unique @default(nanoid(10))
   status     NotificationStatus @default(OrderPending)
   createdAt  DateTime           @default(now())
+  title      String
   message    String
+  promoId    String?
+  promo      Promo?             @relation(fields: [promoId], references: [id], onDelete: Cascade)
+  couponId   String?
+  coupon     Coupon?            @relation(fields: [couponId], references: [id], onDelete: Cascade)
   orderId    String?
   order      Order?             @relation(fields: [orderId], references: [id], onDelete: Cascade)
   userId     String?
@@ -349,6 +370,7 @@ model NotifiRead {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([userId, notifiId], name: "userNotifiRead")
   @@index([userId], type: Hash)
   @@index([id], type: Hash)
   @@index([notifiId], type: Hash)
@@ -381,6 +403,7 @@ model Promo {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   product   PromoAndProduct[]
+  notifi    Notifi[]
 }
 
 model PromoAndProduct {
@@ -389,7 +412,7 @@ model PromoAndProduct {
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@id([productId, promoId])
+  @@id([productId, promoId], name: "UniquePromoAndProduct")
 }
 
 model Coupon {
@@ -405,6 +428,7 @@ model Coupon {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   couponConsume CouponConsume[]
+  notifi        Notifi[]
 }
 
 model CouponConsume {

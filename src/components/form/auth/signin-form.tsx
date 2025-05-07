@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import ErrorToast from "@/components/ui/error-toast";
 
 export function SigninForm({
   className,
@@ -84,7 +85,7 @@ export function SigninForm({
           setIsPending(false);
         },
         onError: (ctx) => {
-          toast.error(ctx.error.message);
+          toast.custom((d) => <ErrorToast t={d} name={ctx.error.message} />);
         },
       },
     );
